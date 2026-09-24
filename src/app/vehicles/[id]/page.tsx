@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { VEHICLES, GLOBAL_SETTINGS } from "@/lib/data";
 import { useSyncStore } from "@/lib/syncStore";
+import { triggerHeiwaCopilot } from "@/components/chat/DealerChatAssistant";
 
 export default function VehicleDetail({ params }: { params: { id: string } }) {
   const vehicleId = parseInt(params?.id) || 1;
@@ -117,6 +118,14 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => triggerHeiwaCopilot(`Analyze landed margin, sheet condition, and bidding strategy for ${vehicle.year} ${vehicle.make} ${vehicle.model} (Lot #${vehicle.lotNumber})`)}
+              className="px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-[#0B1322] to-[#1B2A4A] text-white hover:bg-slate-800 text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+              title="Open Copilot Analysis for this vehicle"
+            >
+              <Sparkles size={14} className="text-[#e56168]" /> Ask AI Copilot
+            </button>
+
             <div className="text-right">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Recommended Max Bid</span>
               <span className="text-2xl font-black text-[#B30D12] block">

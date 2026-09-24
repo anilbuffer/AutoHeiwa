@@ -3,15 +3,14 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { 
-  LayoutDashboard, 
-  Car, 
-  User, 
-  Bell, 
-  Search, 
-  Menu, 
-  X, 
-  ChevronRight, 
+import {
+  LayoutDashboard,
+  Car,
+  User,
+  Bell,
+  Search,
+  Menu,
+  X,
   TrendingUp,
   Building2,
   LogOut,
@@ -21,25 +20,22 @@ import {
 import { GLOBAL_SETTINGS } from '@/lib/data';
 import RoleSwitcher from './RoleSwitcher';
 import { useSyncStore } from '@/lib/syncStore';
+import DealerChatAssistant from '@/components/chat/DealerChatAssistant';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  
-  const { state: syncState, markNotificationAsRead } = useSyncStore();
+  const [chatOpen, setChatOpen] = useState(false);
 
-  const getBreadcrumbs = () => {
-    if (pathname === '/') return [{ label: 'Dashboard', href: '/' }];
-    if (pathname === '/vehicles') return [{ label: 'Auction Vehicles', href: '/vehicles' }];
-    if (pathname.startsWith('/vehicles/')) return [
-      { label: 'Auction Vehicles', href: '/vehicles' },
-      { label: 'Vehicle Intelligence & Bid', href: pathname }
-    ];
-    if (pathname === '/profile') return [{ label: 'Dealer Profile & Criteria', href: '/profile' }];
-    return [{ label: 'Dashboard', href: '/' }];
-  };
+  React.useEffect(() => {
+    const handleOpen = () => setChatOpen(true);
+    window.addEventListener('open-heiwa-copilot', handleOpen);
+    return () => window.removeEventListener('open-heiwa-copilot', handleOpen);
+  }, []);
+
+  const { state: syncState, markNotificationAsRead } = useSyncStore();
 
   const navItems = [
     { label: 'Overview', href: '/', icon: LayoutDashboard, badge: null },
@@ -51,7 +47,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="flex h-screen bg-[#F6F8FB] text-slate-800 font-sans antialiased overflow-hidden">
       {/* Mobile Menu Backdrop */}
       {mobileMenuOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-navy-950/70 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
@@ -77,7 +73,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 <span className="block text-[10px] font-semibold text-slate-400 tracking-widest mt-1">AUCTION INTELLIGENCE</span>
               </div>
             </Link>
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(false)}
               className="md:hidden text-slate-400 hover:text-white p-1"
             >
@@ -110,11 +106,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   key={item.href}
                   href={item.href}
                   onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all ${
-                    isActive
-                      ? 'bg-gradient-to-r from-[#B30D12]/25 to-[#B30D12]/5 text-white border-l-4 border-[#B30D12] font-bold shadow-sm'
-                      : 'text-slate-400 hover:bg-[#111C30] hover:text-slate-100'
-                  }`}
+                  className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all ${isActive
+                    ? 'bg-gradient-to-r from-[#B30D12]/25 to-[#B30D12]/5 text-white border-l-4 border-[#B30D12] font-bold shadow-sm'
+                    : 'text-slate-400 hover:bg-[#111C30] hover:text-slate-100'
+                    }`}
                 >
                   <div className="flex items-center gap-3">
                     <Icon size={18} className={isActive ? 'text-[#e56168]' : 'text-slate-400'} />
@@ -144,8 +139,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           </div>
-          <Link 
-            href="/login" 
+          <Link
+            href="/login"
             title="Switch User / Logout"
             className="p-1.5 text-slate-400 hover:text-white hover:bg-[#1B2A4A] rounded-lg transition-colors"
           >
@@ -159,30 +154,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         {/* Header Bar */}
         <header className="h-[72px] bg-white border-b border-slate-200/90 px-4 sm:px-8 flex items-center justify-between shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-20">
           <div className="flex items-center gap-3 min-w-0">
-            <button 
+            <button
               onClick={() => setMobileMenuOpen(true)}
               className="md:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100"
             >
               <Menu size={20} />
             </button>
             <div className="min-w-0">
-              <div className="text-[12px] text-slate-500 font-medium flex items-center gap-1.5">
-                <span className="font-semibold text-slate-700">Dealer Portal</span>
-                {getBreadcrumbs().map((b, idx) => (
-                  <React.Fragment key={idx}>
-                    <ChevronRight size={12} className="text-slate-400 shrink-0" />
-                    <Link href={b.href} className="hover:text-slate-900 truncate">
-                      {b.label}
-                    </Link>
-                  </React.Fragment>
-                ))}
-              </div>
-              <div className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
-                Auckland Auto Group 
-                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
-                  <CheckCircle2 size={11} /> Commercial VIP Tier
-                </span>
-              </div>
+              <h1 className="text-xl font-black text-slate-900 tracking-tight">
+                Auckland Auto Group
+              </h1>
             </div>
           </div>
 
@@ -191,12 +172,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             {/* Quick Search */}
             <div className="relative hidden md:flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search Toyota, Aqua, Hybrid, lot #..." 
-                className="pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#B30D12] focus:ring-2 focus:ring-[#B30D12]/20 outline-none transition-all w-[280px] text-xs placeholder:text-slate-400 font-medium"
+                placeholder="Search Toyota, Aqua, Hybrid, lot #..."
+                className="pl-12 pr-12 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#B30D12] focus:ring-2 focus:ring-[#B30D12]/20 outline-none transition-all w-[420px] text-sm placeholder:text-slate-400 font-medium"
               />
               <span className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-white border border-slate-200 text-slate-400 rounded px-1.5 py-0.5 text-[10px] font-bold shadow-2xs">
                 ⌘K
@@ -208,7 +189,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
             {/* Notification Bell */}
             <div className="relative">
-              <button 
+              <button
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 className="relative p-2.5 text-slate-600 hover:text-slate-900 transition-colors border border-slate-200 rounded-xl hover:bg-slate-50 bg-white"
                 title="Sourcing & Intelligence Alerts"
@@ -229,14 +210,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   </div>
                   <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
                     {syncState.dealerNotifications.map((notif) => (
-                      <div 
+                      <div
                         key={notif.id}
                         onClick={() => markNotificationAsRead(notif.id)}
-                        className={`p-2.5 rounded-xl border text-xs transition-colors cursor-pointer ${
-                          notif.isRead 
-                            ? 'bg-slate-50/60 border-slate-100' 
-                            : 'bg-red-50/30 border-red-100 hover:bg-red-50/50'
-                        }`}
+                        className={`p-2.5 rounded-xl border text-xs transition-colors cursor-pointer ${notif.isRead
+                          ? 'bg-slate-50/60 border-slate-100'
+                          : 'bg-red-50/30 border-red-100 hover:bg-red-50/50'
+                          }`}
                       >
                         <div className="flex items-center justify-between">
                           <p className="font-bold text-slate-900 flex items-center gap-1.5">
@@ -257,7 +237,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </div>
 
             {/* Profile Avatar */}
-            <Link 
+            <Link
               href="/profile"
               className="flex items-center gap-2.5 pl-2 cursor-pointer group"
             >
@@ -268,12 +248,44 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
         </header>
 
-        {/* Scrollable Page Canvas */}
-        <main className="flex-1 overflow-y-auto bg-[#F6F8FB] p-4 sm:p-7 lg:p-9">
-          <div className="max-w-[1520px] mx-auto">
-            {children}
-          </div>
-        </main>
+        {/* Main Content Viewport */}
+        <div className="flex-1 flex min-h-0 overflow-hidden relative">
+          {/* Scrollable Page Canvas - Always full width, never squeezed */}
+          <main className="flex-1 overflow-y-auto bg-[#F6F8FB] p-4 sm:p-7 lg:p-9 min-w-0">
+            <div className="max-w-[1520px] mx-auto">
+              {children}
+            </div>
+          </main>
+
+          {/* Right Side Chatbot Assistant - Opens OVER the page in an absolute/fixed way */}
+          <DealerChatAssistant
+            isOpen={chatOpen}
+            onClose={() => setChatOpen(false)}
+          />
+        </div>
+
+        {/* Floating Chat Trigger Button when closed */}
+        {!chatOpen && (
+          <button
+            onClick={() => setChatOpen(true)}
+            className="fixed bottom-6 right-6 z-30 flex items-center gap-3 px-4 py-3 rounded-2xl bg-gradient-to-r from-[#0B1322] via-[#101C33] to-[#1B2A4A] text-white shadow-2xl border border-white/20 hover:scale-105 hover:shadow-red-950/40 transition-all duration-200 group"
+            title="Open Heiwa AI Auction Copilot"
+          >
+            <div className="relative w-8 h-8 rounded-xl bg-[#B30D12] flex items-center justify-center font-bold text-sm shadow-md group-hover:rotate-6 transition-transform">
+              <span>和</span>
+              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#0B1322] animate-pulse"></span>
+            </div>
+            <div className="text-left">
+              <div className="text-xs font-black tracking-wide flex items-center gap-1.5">
+                Heiwa AI Copilot
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-white/20 text-red-200 font-bold">Online</span>
+              </div>
+              <div className="text-[10px] text-slate-300">
+                Landed cost · Sheet codes · Max bid
+              </div>
+            </div>
+          </button>
+        )}
       </div>
     </div>
   );

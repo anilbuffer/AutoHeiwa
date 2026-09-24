@@ -3,18 +3,18 @@
 import React, { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import Link from "next/link";
-import { 
-  ChevronDown, 
-  ArrowRight, 
-  Sparkles, 
-  Clock, 
-  TrendingUp, 
-  ShieldCheck, 
-  Flame, 
-  Filter, 
-  CheckCircle2, 
-  Car, 
-  DollarSign, 
+import {
+  ChevronDown,
+  ArrowRight,
+  Sparkles,
+  Clock,
+  TrendingUp,
+  ShieldCheck,
+  Flame,
+  Filter,
+  CheckCircle2,
+  Car,
+  DollarSign,
   Layers,
   SlidersHorizontal,
   ChevronRight,
@@ -22,9 +22,10 @@ import {
 } from "lucide-react";
 import { VEHICLES, GLOBAL_SETTINGS } from "@/lib/data";
 import { useSyncStore } from "@/lib/syncStore";
+import { triggerHeiwaCopilot } from "@/components/chat/DealerChatAssistant";
 
 export default function Dashboard() {
-  const [filterTab, setFilterTab] = useState<'all' | 'priority' | 'under20k'>('all');
+  const [filterTab, setFilterTab] = useState<'all' | 'priority' | 'under20k'>('priority');
   const { state: syncState, markNotificationAsRead } = useSyncStore();
 
   const latestSourcingMatch = syncState.dealerNotifications.find(n => n.type === 'sourcing_match');
@@ -38,7 +39,7 @@ export default function Dashboard() {
   return (
     <AppLayout>
       <div className="space-y-8 pb-12">
-        
+
         {/* Top Header Briefing */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div>
@@ -65,6 +66,12 @@ export default function Dashboard() {
                 <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1 rounded">▲ Live Feed</span>
               </span>
             </div>
+            <button
+              onClick={() => triggerHeiwaCopilot("Top Arbitrage Picks Today")}
+              className="px-3.5 py-2.5 bg-gradient-to-r from-[#0B1322] to-[#1B2A4A] hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+            >
+              <Sparkles size={14} className="text-[#e56168]" /> Ask AI Copilot
+            </button>
             <Link
               href="/vehicles"
               className="px-4 py-2.5 bg-[#B30D12] hover:bg-[#940B0F] text-white rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow flex items-center gap-1.5"
@@ -173,7 +180,7 @@ export default function Dashboard() {
 
         {/* Main Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
+
           {/* Recommended Vehicles Column (2 Spans) */}
           <div className="lg:col-span-2 space-y-5">
             {/* Sub-header with Filter Tabs */}
@@ -182,7 +189,7 @@ export default function Dashboard() {
                 <h2 className="text-lg font-black text-slate-900 tracking-tight">
                   High-Margin Recommended Lots
                 </h2>
-                <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-full">
+                <span className="px-2 py-0.5 bg-red-600 text-white text-sm font-bold rounded-lg">
                   {filteredVehicles.length}
                 </span>
               </div>
@@ -191,33 +198,30 @@ export default function Dashboard() {
               <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
                 <button
                   onClick={() => setFilterTab('all')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                    filterTab === 'all' 
-                      ? 'bg-white text-slate-900 shadow-xs' 
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${filterTab === 'all'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
+                    }`}
                 >
                   All Lots
                 </button>
                 <button
-                  onClick={() => setFilterTab('priority')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                    filterTab === 'priority' 
-                      ? 'bg-emerald-600 text-white shadow-xs' 
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
-                >
-                  Priority Buys (Score 90+)
-                </button>
-                <button
                   onClick={() => setFilterTab('under20k')}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
-                    filterTab === 'under20k' 
-                      ? 'bg-white text-slate-900 shadow-xs' 
-                      : 'text-slate-500 hover:text-slate-800'
-                  }`}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${filterTab === 'under20k'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
+                    }`}
                 >
                   Under NZ$20k
+                </button>
+                <button
+                  onClick={() => setFilterTab('priority')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${filterTab === 'priority'
+                    ? 'bg-emerald-600 text-white shadow-xs'
+                    : 'text-slate-500 hover:text-slate-800'
+                    }`}
+                >
+                  Priority Buys (Score 90+)
                 </button>
               </div>
             </div>
@@ -225,19 +229,19 @@ export default function Dashboard() {
             {/* Vehicle Cards List */}
             <div className="space-y-4">
               {filteredVehicles.map((vehicle) => (
-                <div 
-                  key={vehicle.id} 
+                <div
+                  key={vehicle.id}
                   className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col md:flex-row hover-lift group"
                 >
                   {/* Vehicle Image with Floating Badges */}
                   <div className="w-full md:w-[260px] h-[200px] md:h-auto relative shrink-0 overflow-hidden bg-slate-100">
-                    <img 
-                      src={vehicle.image} 
-                      alt={`${vehicle.make} ${vehicle.model}`} 
+                    <img
+                      src={vehicle.image}
+                      alt={`${vehicle.make} ${vehicle.model}`}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/20" />
-                    
+
                     {/* Top Grade Stamp */}
                     <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
                       <span className="px-2 py-0.5 bg-[#0B1322]/90 backdrop-blur-md text-white font-extrabold text-[11px] rounded-md border border-white/20 shadow-sm">
@@ -279,14 +283,13 @@ export default function Dashboard() {
 
                         {/* AI Score Badge */}
                         <div className="text-right shrink-0">
-                          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold ${
-                            vehicle.status === 'Priority' 
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
-                              : vehicle.status === 'Consider' 
-                              ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                          <span className={`inline-flex items-center gap-1 px-3 py-2 rounded-lg text-lg font-extrabold ${vehicle.status === 'Priority'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : vehicle.status === 'Consider'
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200'
                               : 'bg-slate-100 text-slate-600 border border-slate-200'
-                          }`}>
-                            <Sparkles size={12} />
+                            }`}>
+                            <Sparkles size={16} />
                             Score {vehicle.score}
                           </span>
                         </div>
@@ -330,8 +333,8 @@ export default function Dashboard() {
                       </div>
 
                       <div className="flex items-center gap-2">
-                        <Link 
-                          href={`/vehicles/${vehicle.id}`} 
+                        <Link
+                          href={`/vehicles/${vehicle.id}`}
                           className="px-4 py-2 bg-[#1B2A4A] hover:bg-[#111C30] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
                         >
                           Calculate & Bid <ArrowRight size={13} />
@@ -344,7 +347,7 @@ export default function Dashboard() {
             </div>
 
             <div className="text-center pt-2">
-              <Link 
+              <Link
                 href="/vehicles"
                 className="inline-flex items-center gap-2 text-xs font-bold text-[#B30D12] hover:text-[#940B0F] bg-red-50 hover:bg-red-100/80 px-5 py-2.5 rounded-xl border border-red-200 transition-colors"
               >
@@ -355,7 +358,7 @@ export default function Dashboard() {
 
           {/* Right Column: Opportunity Overview & Intelligence (1 Span) */}
           <div className="space-y-6">
-            
+
             {/* Opportunity Radar Card */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6">
               <div className="flex items-center justify-between mb-4">
@@ -370,26 +373,26 @@ export default function Dashboard() {
                 <div className="relative w-40 h-40">
                   <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
                     <circle cx="50" cy="50" r="38" fill="transparent" stroke="#E2E8F0" strokeWidth="16" />
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r="38" 
-                      fill="transparent" 
-                      stroke="#10B981" 
-                      strokeWidth="16" 
-                      strokeDasharray="238.7" 
-                      strokeDashoffset="180" 
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="38"
+                      fill="transparent"
+                      stroke="#10B981"
+                      strokeWidth="16"
+                      strokeDasharray="238.7"
+                      strokeDashoffset="180"
                       strokeLinecap="round"
                     />
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r="38" 
-                      fill="transparent" 
-                      stroke="#F59E0B" 
-                      strokeWidth="16" 
-                      strokeDasharray="238.7" 
-                      strokeDashoffset="110" 
+                    <circle
+                      cx="50"
+                      cy="50"
+                      r="38"
+                      fill="transparent"
+                      stroke="#F59E0B"
+                      strokeWidth="16"
+                      strokeDasharray="238.7"
+                      strokeDashoffset="110"
                       strokeLinecap="round"
                     />
                   </svg>
