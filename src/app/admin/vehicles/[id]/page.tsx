@@ -54,10 +54,10 @@ export default function AdminVehicleDetail({ params }: { params: { id: string } 
         </div>
 
         {/* Vehicle Header Brief */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-blue-50 text-blue-700 border border-blue-200">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-[#1B2A4A]/10 text-[#1B2A4A] border border-[#1B2A4A]/20">
                 Broker Audit Mode
               </span>
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">
@@ -79,7 +79,7 @@ export default function AdminVehicleDetail({ params }: { params: { id: string } 
           <div className="flex items-center gap-3">
             <button
               onClick={handleSave}
-              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
+              className="px-4 py-2.5 bg-[#B30D12] hover:bg-[#940B0F] text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
             >
               <Save size={14} /> Update Broker Allocation
             </button>
@@ -96,13 +96,13 @@ export default function AdminVehicleDetail({ params }: { params: { id: string } 
         {/* Top Grid: Photo & Broker Controls */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Photo */}
-          <div className="lg:col-span-2 h-[340px] rounded-2xl overflow-hidden relative shadow-sm border border-slate-200 bg-slate-900 group">
+          <div className="lg:col-span-2 h-[340px] rounded-2xl overflow-hidden relative shadow-sm border border-slate-200 bg-[#0B1322] group">
             <img 
               src={vehicle.image} 
               alt={vehicle.model} 
               className="w-full h-full object-cover" 
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0B1322]/80 via-transparent to-transparent" />
             
             <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white">
               <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-lg font-bold border border-white/20">

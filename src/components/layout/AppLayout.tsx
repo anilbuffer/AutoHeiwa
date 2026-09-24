@@ -51,31 +51,31 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   ];
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] text-slate-800 font-sans antialiased overflow-hidden">
+    <div className="flex h-screen bg-[#F6F8FB] text-slate-800 font-sans antialiased overflow-hidden">
       {/* Mobile Menu Backdrop */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-navy-950/70 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Sleek Deep Navy */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-50 w-[270px] bg-[#0F172A] text-slate-300 flex flex-col justify-between shrink-0 border-r border-slate-800/80 transition-transform duration-300 ease-in-out
+        fixed md:static inset-y-0 left-0 z-50 w-[270px] bg-[#0B1322] text-slate-300 flex flex-col justify-between shrink-0 border-r border-[#1B2A4A]/60 transition-transform duration-300 ease-in-out
         ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <div>
           {/* Brand Logo & Header */}
-          <div className="h-[76px] flex items-center justify-between px-5 border-b border-slate-800/80 bg-[#0B1120]">
+          <div className="h-[76px] flex items-center justify-between px-5 border-b border-[#1B2A4A]/70 bg-[#080E1A]">
             <Link href="/" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-lg shadow-red-950/40 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 rounded-xl bg-[#B30D12] flex items-center justify-center shadow-lg shadow-[#B30D12]/30 group-hover:scale-105 transition-transform">
                 <span className="text-white font-extrabold text-lg tracking-wider">和</span>
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[15px] font-black text-white tracking-wider leading-none">AUTOHEIWA</span>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-red-500/20 text-red-400 border border-red-500/30">NZ</span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-[#B30D12]/20 text-red-300 border border-[#B30D12]/40">NZ</span>
                 </div>
                 <span className="block text-[10px] font-semibold text-slate-400 tracking-widest mt-1">AUCTION INTELLIGENCE</span>
               </div>
@@ -89,16 +89,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Quick Portal Switcher Banner */}
-          <div className="p-3 mx-3 mt-3 bg-slate-800/50 rounded-xl border border-slate-700/60">
+          <div className="p-3 mx-3 mt-3 bg-[#111C30] rounded-xl border border-[#1B2A4A]">
             <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-1.5 px-1">
               <span>PORTAL MODE</span>
-              <span className="inline-flex items-center gap-1 text-emerald-400">
+              <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Dealer Active
               </span>
             </div>
             <Link 
               href="/admin" 
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-900/80 hover:bg-slate-700/60 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors group"
+              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#0B1322] hover:bg-[#1B2A4A] text-slate-200 text-xs font-semibold border border-[#1B2A4A] transition-colors group"
             >
               <span className="flex items-center gap-1.5">
                 <ShieldCheck size={14} className="text-blue-400" /> Switch to Admin Portal
@@ -108,7 +108,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </div>
 
           {/* Live JPY/NZD Rate Pill */}
-          <div className="px-4 py-2 mx-3 mt-2 flex items-center justify-between bg-slate-900/60 rounded-lg border border-slate-800 text-[11px]">
+          <div className="px-4 py-2 mx-3 mt-2 flex items-center justify-between bg-[#0E182A] rounded-lg border border-[#1B2A4A]/60 text-[11px]">
             <div className="flex items-center gap-1.5 text-slate-300 font-medium">
               <TrendingUp size={12} className="text-emerald-400" />
               <span>¥ / NZ$:</span>
@@ -134,16 +134,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all ${
                     isActive
-                      ? 'bg-gradient-to-r from-red-600/20 to-red-600/5 text-white border-l-4 border-red-500 font-bold shadow-sm'
-                      : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-100'
+                      ? 'bg-gradient-to-r from-[#B30D12]/25 to-[#B30D12]/5 text-white border-l-4 border-[#B30D12] font-bold shadow-sm'
+                      : 'text-slate-400 hover:bg-[#111C30] hover:text-slate-100'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon size={18} className={isActive ? 'text-red-400' : 'text-slate-400'} />
+                    <Icon size={18} className={isActive ? 'text-[#e56168]' : 'text-slate-400'} />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#B30D12]/20 text-red-300 border border-[#B30D12]/30">
                       {item.badge}
                     </span>
                   )}
@@ -153,12 +153,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           </nav>
 
           {/* Tokyo Auction Feeds Status */}
-          <div className="mx-3 mt-6 p-3 bg-slate-900/40 rounded-xl border border-slate-800/60 text-xs">
+          <div className="mx-3 mt-6 p-3 bg-[#0E182A] rounded-xl border border-[#1B2A4A]/60 text-xs">
             <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-2">
               <span className="flex items-center gap-1.5">
                 <Clock size={12} className="text-slate-400" /> Auction Countdown
               </span>
-              <span className="text-red-400 font-bold">02h 45m</span>
+              <span className="text-red-400 font-bold font-mono">02h 45m</span>
             </div>
             <div className="space-y-1.5 text-[11px] text-slate-300">
               <div className="flex items-center justify-between">
@@ -178,9 +178,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </div>
 
         {/* User / Dealership Footer */}
-        <div className="p-3 m-3 bg-[#0B1120] rounded-xl border border-slate-800 flex items-center justify-between">
+        <div className="p-3 m-3 bg-[#080E1A] rounded-xl border border-[#1B2A4A] flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-bold text-sm shrink-0 shadow-md">
+            <div className="w-9 h-9 rounded-xl bg-[#1B2A4A] text-white flex items-center justify-center font-bold text-sm shrink-0 border border-[#2B406B]">
               DM
             </div>
             <div className="min-w-0">
@@ -193,7 +193,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           <Link 
             href="/login" 
             title="Switch User / Logout"
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            className="p-1.5 text-slate-400 hover:text-white hover:bg-[#1B2A4A] rounded-lg transition-colors"
           >
             <ExternalLink size={14} />
           </Link>
@@ -203,7 +203,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header Bar */}
-        <header className="h-[72px] bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-20">
+        <header className="h-[72px] bg-white border-b border-slate-200/90 px-4 sm:px-8 flex items-center justify-between shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-20">
           <div className="flex items-center gap-3 min-w-0">
             <button 
               onClick={() => setMobileMenuOpen(true)}
@@ -242,7 +242,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search Toyota, Aqua, Hybrid, lot #..." 
-                className="pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 outline-none transition-all w-[280px] text-xs placeholder:text-slate-400 font-medium"
+                className="pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#B30D12] focus:ring-2 focus:ring-[#B30D12]/20 outline-none transition-all w-[280px] text-xs placeholder:text-slate-400 font-medium"
               />
               <span className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-white border border-slate-200 text-slate-400 rounded px-1.5 py-0.5 text-[10px] font-bold shadow-2xs">
                 ⌘K
@@ -252,9 +252,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             {/* Switch to Admin Quick Pill */}
             <Link 
               href="/admin"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-200 transition-colors"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 transition-colors"
             >
-              <ShieldCheck size={14} className="text-blue-600" />
+              <ShieldCheck size={14} className="text-[#1B2A4A]" />
               <span>Admin View</span>
             </Link>
 
@@ -265,19 +265,19 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                 className="relative p-2.5 text-slate-600 hover:text-slate-900 transition-colors border border-slate-200 rounded-xl hover:bg-slate-50 bg-white"
               >
                 <Bell size={18} />
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-red-600 rounded-full border-2 border-white shadow-xs"></span>
+                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#B30D12] rounded-full border-2 border-white shadow-xs"></span>
               </button>
 
               {notificationsOpen && (
                 <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
                     <span className="text-xs font-bold text-slate-900">Auction Intelligence Alerts</span>
-                    <span className="text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full">3 New</span>
+                    <span className="text-[10px] font-bold text-[#B30D12] bg-red-50 px-2 py-0.5 rounded-full">3 New</span>
                   </div>
                   <div className="space-y-2.5">
                     <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
                       <p className="font-bold text-slate-800 flex items-center gap-1">
-                        <Sparkles size={12} className="text-red-600" /> Priority Buy Identified
+                        <Sparkles size={12} className="text-[#B30D12]" /> Priority Buy Identified
                       </p>
                       <p className="text-slate-600 mt-0.5 text-[11px]">2019 Toyota Aqua S at USS Tokyo (Lot #40822) has NZ$4,000 spread.</p>
                       <span className="text-[10px] text-slate-400 font-semibold mt-1 block">18 mins ago</span>
@@ -297,7 +297,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               href="/profile"
               className="flex items-center gap-2.5 pl-2 cursor-pointer group"
             >
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-slate-900 to-slate-700 text-white flex items-center justify-center font-bold text-xs shadow-sm border border-slate-200">
+              <div className="w-9 h-9 rounded-xl bg-[#1B2A4A] text-white flex items-center justify-center font-bold text-xs shadow-sm border border-slate-200">
                 AAG
               </div>
             </Link>
@@ -305,7 +305,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         </header>
 
         {/* Scrollable Page Canvas */}
-        <main className="flex-1 overflow-y-auto bg-[#F8FAFC] p-4 sm:p-7 lg:p-9">
+        <main className="flex-1 overflow-y-auto bg-[#F6F8FB] p-4 sm:p-7 lg:p-9">
           <div className="max-w-[1520px] mx-auto">
             {children}
           </div>

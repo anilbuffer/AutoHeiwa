@@ -58,9 +58,9 @@ export default function ProfilePage() {
       <div className="space-y-8 pb-16 max-w-5xl mx-auto">
         
         {/* Profile Header */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-slate-900 to-slate-700 text-white flex items-center justify-center font-black text-2xl shadow-sm">
+            <div className="w-16 h-16 rounded-2xl bg-[#1B2A4A] text-white flex items-center justify-center font-black text-2xl shadow-sm border border-[#2B406B]">
               AAG
             </div>
             <div>
@@ -82,7 +82,7 @@ export default function ProfilePage() {
 
           <button
             onClick={handleSave}
-            className="px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:shadow flex items-center gap-1.5 self-start md:self-auto"
+            className="px-5 py-2.5 bg-[#B30D12] hover:bg-[#940B0F] text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:shadow flex items-center gap-1.5 self-start md:self-auto"
           >
             <Save size={14} /> Save Preferences
           </button>
@@ -99,7 +99,7 @@ export default function ProfilePage() {
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-[#1B2A4A]/10 text-[#1B2A4A] flex items-center justify-center font-bold">
                 <Settings2 size={18} />
               </div>
               <div>
@@ -128,7 +128,7 @@ export default function ProfilePage() {
                       onClick={() => toggleMake(make)}
                       className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
                         isSelected 
-                          ? 'bg-slate-900 text-white border-slate-900 shadow-xs' 
+                          ? 'bg-[#1B2A4A] text-white border-[#1B2A4A] shadow-xs' 
                           : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
                       }`}
                     >
@@ -185,7 +185,7 @@ export default function ProfilePage() {
                   step={5000}
                   value={maxKm}
                   onChange={(e) => setMaxKm(parseInt(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-slate-900"
+                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#1B2A4A]"
                 />
                 <div className="flex justify-between text-[10px] text-slate-400 font-bold">
                   <span>40,000 km</span>
@@ -225,7 +225,7 @@ export default function ProfilePage() {
             <div className="pt-6 border-t border-slate-100">
               <div className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-200">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-red-100 text-red-600 flex items-center justify-center font-bold">
+                  <div className="w-10 h-10 rounded-xl bg-red-100 text-[#B30D12] flex items-center justify-center font-bold">
                     <Zap size={20} />
                   </div>
                   <div>

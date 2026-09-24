@@ -43,9 +43,9 @@ export default function HelpPage() {
       <div className="space-y-8 pb-16 max-w-5xl mx-auto">
         
         {/* Header */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1B2A4A]/10 text-[#1B2A4A] border border-[#1B2A4A]/20">
               Dealer Support & Concierge
             </span>
           </div>
@@ -59,33 +59,33 @@ export default function HelpPage() {
 
         {/* 3 Concierge Quick Action Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-red-50 text-red-600 flex items-center justify-center font-bold">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-3 hover-lift">
+            <div className="w-10 h-10 rounded-xl bg-red-50 text-[#B30D12] flex items-center justify-center font-bold">
               <PhoneCall size={20} />
             </div>
             <h3 className="text-base font-black text-slate-900">Tokyo Auction Floor Desk</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
               Direct line to our licensed USS Tokyo & Yokohama bidders for last-minute physical inspections.
             </p>
-            <div className="pt-2 text-xs font-bold text-red-600 font-mono">
+            <div className="pt-2 text-xs font-bold text-[#B30D12] font-mono">
               +81 3 5555 0192 (JST 08:00 - 19:00)
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-3 hover-lift">
+            <div className="w-10 h-10 rounded-xl bg-[#1B2A4A]/10 text-[#1B2A4A] flex items-center justify-center font-bold">
               <MessageSquare size={20} />
             </div>
             <h3 className="text-base font-black text-slate-900">NZ Logistics & Compliance</h3>
             <p className="text-xs text-slate-500 leading-relaxed">
               Updates on Ports of Auckland vessel schedules, MAF biosecurity inspections, and entry compliance.
             </p>
-            <div className="pt-2 text-xs font-bold text-blue-600 font-mono">
+            <div className="pt-2 text-xs font-bold text-[#1B2A4A] font-mono">
               nzops@autoheiwa.com
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-3">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-3 hover-lift">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
               <Award size={20} />
             </div>
@@ -102,7 +102,7 @@ export default function HelpPage() {
         {/* Auction Grades Reference Guide */}
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6 sm:p-7">
           <div className="flex items-center gap-2 mb-4">
-            <BookOpen size={18} className="text-slate-700" />
+            <BookOpen size={18} className="text-[#1B2A4A]" />
             <h2 className="text-base font-black text-slate-900">Japanese Auction Grade Benchmark</h2>
           </div>
 
@@ -116,7 +116,7 @@ export default function HelpPage() {
             </div>
 
             <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
-              <span className="text-xs font-black text-slate-900 px-2 py-0.5 rounded bg-blue-100 text-blue-800">
+              <span className="text-xs font-black text-slate-900 px-2 py-0.5 rounded bg-[#1B2A4A]/10 text-[#1B2A4A]">
                 Grade 4.5
               </span>
               <p className="font-bold text-slate-800 pt-1">Gold Standard Dealer Grade</p>
@@ -150,12 +150,12 @@ export default function HelpPage() {
               <div key={i} className="py-3.5">
                 <button
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                  className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-900 hover:text-red-600 transition-colors"
+                  className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-900 hover:text-[#B30D12] transition-colors"
                 >
                   <span>{faq.q}</span>
                   <ChevronDown 
                     size={16} 
-                    className={`text-slate-400 transform transition-transform ${openFaq === i ? 'rotate-180 text-red-600' : ''}`} 
+                    className={`text-slate-400 transform transition-transform ${openFaq === i ? 'rotate-180 text-[#B30D12]' : ''}`} 
                   />
                 </button>
                 {openFaq === i && (

@@ -39,9 +39,9 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
         </div>
 
         {/* Dealer Header */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-700 to-indigo-800 text-white flex items-center justify-center font-black text-xl shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-[#1B2A4A] text-white flex items-center justify-center font-black text-xl shadow-sm border border-[#2B406B]">
               {dealer.name.substring(0, 2).toUpperCase()}
             </div>
             <div>
@@ -49,7 +49,7 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
                 <h1 className="text-2xl font-black text-slate-900 tracking-tight">
                   {dealer.name}
                 </h1>
-                <span className="text-xs font-bold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-full border border-blue-200">
+                <span className="text-xs font-bold text-[#1B2A4A] bg-[#1B2A4A]/10 px-2.5 py-0.5 rounded-full border border-[#1B2A4A]/20">
                   {dealer.tier}
                 </span>
               </div>
@@ -66,7 +66,7 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6 sm:p-7 space-y-6">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h2 className="text-base font-black text-slate-900 flex items-center gap-2">
-              <Settings2 size={18} className="text-blue-600" /> Client Buying Rules & Preferences
+              <Settings2 size={18} className="text-[#1B2A4A]" /> Client Buying Rules & Preferences
             </h2>
             <span className="text-xs text-slate-400 font-medium">Used by AutoHeiwa scraper match algorithm</span>
           </div>
@@ -87,7 +87,7 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
               <span className="font-bold text-slate-400 uppercase tracking-wider block mb-2">Target Models</span>
               <div className="flex flex-wrap gap-1.5">
                 {dealer.preferences.models.map(md => (
-                  <span key={md} className="px-2.5 py-1 bg-blue-50 font-bold text-blue-700 rounded-lg border border-blue-100">
+                  <span key={md} className="px-2.5 py-1 bg-red-50 font-bold text-[#B30D12] rounded-lg border border-red-100">
                     {md}
                   </span>
                 ))}
@@ -158,7 +158,7 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
                     </div>
                     <Link
                       href={`/admin/vehicles/${v.id}`}
-                      className="px-3 py-1 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold flex items-center gap-1"
+                      className="px-3 py-1 bg-[#1B2A4A] hover:bg-[#0B1322] text-white rounded-lg text-xs font-bold flex items-center gap-1"
                     >
                       Audit Sheet <ArrowRight size={12} />
                     </Link>

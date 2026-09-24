@@ -41,9 +41,9 @@ export default function AdminHelpPage() {
       <div className="space-y-8 pb-16 max-w-4xl mx-auto">
         
         {/* Header */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="flex items-center gap-2 mb-1">
-            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+            <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1B2A4A]/10 text-[#1B2A4A] border border-[#1B2A4A]/20">
               Brokerage Standard Operating Procedures
             </span>
           </div>
@@ -57,8 +57,8 @@ export default function AdminHelpPage() {
 
         {/* 3 Quick Telemetry Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-2 hover-lift">
+            <div className="w-10 h-10 rounded-xl bg-[#1B2A4A]/10 text-[#1B2A4A] flex items-center justify-center font-bold">
               <Database size={20} />
             </div>
             <h3 className="text-sm font-black text-slate-900">Scraper Sync Engine</h3>
@@ -67,7 +67,7 @@ export default function AdminHelpPage() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-2">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-2 hover-lift">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
               <ShieldCheck size={20} />
             </div>
@@ -77,8 +77,8 @@ export default function AdminHelpPage() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-2">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+          <div className="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] space-y-2 hover-lift">
+            <div className="w-10 h-10 rounded-xl bg-red-50 text-[#B30D12] flex items-center justify-center font-bold">
               <Terminal size={20} />
             </div>
             <h3 className="text-sm font-black text-slate-900">Broker Direct Floor Terminal</h3>
@@ -97,7 +97,7 @@ export default function AdminHelpPage() {
               <div key={idx} className="py-4">
                 <button
                   onClick={() => setOpenSection(openSection === idx ? null : idx)}
-                  className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-900 hover:text-blue-600 transition-colors"
+                  className="w-full flex items-center justify-between text-left text-xs font-bold text-slate-900 hover:text-[#B30D12] transition-colors"
                 >
                   <span className="flex items-center gap-2">
                     <span className="w-5 h-5 rounded-full bg-slate-100 text-slate-600 flex items-center justify-center text-[10px] font-mono">
@@ -107,7 +107,7 @@ export default function AdminHelpPage() {
                   </span>
                   <ChevronDown 
                     size={16} 
-                    className={`text-slate-400 transform transition-transform ${openSection === idx ? 'rotate-180 text-blue-600' : ''}`} 
+                    className={`text-slate-400 transform transition-transform ${openSection === idx ? 'rotate-180 text-[#B30D12]' : ''}`} 
                   />
                 </button>
                 {openSection === idx && (

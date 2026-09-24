@@ -49,10 +49,10 @@ export default function AdminSettings() {
       <div className="space-y-8 pb-16 max-w-4xl mx-auto">
         
         {/* Header */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1B2A4A]/10 text-[#1B2A4A] border border-[#1B2A4A]/20">
                 Core Financial Engine
               </span>
             </div>
@@ -66,7 +66,7 @@ export default function AdminSettings() {
 
           <button
             onClick={handleSave}
-            className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 self-start md:self-auto"
+            className="px-5 py-2.5 bg-[#B30D12] hover:bg-[#940B0F] text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5 self-start md:self-auto"
           >
             <Save size={14} /> Commit Engine Parameters
           </button>
@@ -83,7 +83,7 @@ export default function AdminSettings() {
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+              <div className="w-8 h-8 rounded-lg bg-[#1B2A4A]/10 text-[#1B2A4A] flex items-center justify-center font-bold">
                 <Calculator size={18} />
               </div>
               <div>
@@ -94,7 +94,7 @@ export default function AdminSettings() {
 
             <button 
               onClick={handleSyncFx}
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 bg-blue-50 px-3 py-1.5 rounded-lg border border-blue-200 transition-colors"
+              className="text-xs font-bold text-[#1B2A4A] hover:text-[#0B1322] flex items-center gap-1 bg-[#1B2A4A]/10 px-3 py-1.5 rounded-lg border border-[#1B2A4A]/20 transition-colors"
             >
               <RefreshCw size={12} className={isSyncing ? "animate-spin" : ""} /> Sync Live Bank FX
             </button>
@@ -116,7 +116,7 @@ export default function AdminSettings() {
                     step="0.05"
                     value={fxRate}
                     onChange={(e) => setFxRate(parseFloat(e.target.value) || 0)}
-                    className="w-24 px-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 text-right outline-none focus:border-blue-500"
+                    className="w-24 px-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs font-mono font-bold text-slate-900 text-right outline-none focus:border-[#B30D12]"
                   />
                   <span className="text-xs font-bold text-slate-700">JPY</span>
                 </div>
@@ -137,7 +137,7 @@ export default function AdminSettings() {
                     type="number"
                     value={freight}
                     onChange={(e) => setFreight(parseInt(e.target.value) || 0)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-blue-500"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-[#B30D12]"
                   />
                 </div>
                 <p className="text-[11px] text-slate-400">Tokyo/Yokohama to Auckland port ocean carrier contract.</p>
@@ -154,7 +154,7 @@ export default function AdminSettings() {
                     type="number"
                     value={compliance}
                     onChange={(e) => setCompliance(parseInt(e.target.value) || 0)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-blue-500"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-[#B30D12]"
                   />
                 </div>
                 <p className="text-[11px] text-slate-400">Standard VTNZ/VINZ compliance testing, bio-wash, and entry cert.</p>
@@ -171,7 +171,7 @@ export default function AdminSettings() {
                     type="number"
                     value={defaultMargin}
                     onChange={(e) => setDefaultMargin(parseInt(e.target.value) || 0)}
-                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-blue-500"
+                    className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 outline-none focus:bg-white focus:border-[#B30D12]"
                   />
                 </div>
                 <p className="text-[11px] text-slate-400">Fallback minimum profit spread for unconfigured dealers.</p>
@@ -196,9 +196,9 @@ export default function AdminSettings() {
             </div>
 
             {/* Live Model Sensitivity Preview */}
-            <div className="mt-6 p-4 rounded-2xl bg-blue-50/60 border border-blue-200/80 text-xs space-y-2">
-              <div className="flex items-center gap-1.5 font-black text-blue-900">
-                <Info size={14} className="text-blue-600" />
+            <div className="mt-6 p-4 rounded-2xl bg-[#1B2A4A]/5 border border-[#1B2A4A]/15 text-xs space-y-2">
+              <div className="flex items-center gap-1.5 font-black text-[#1B2A4A]">
+                <Info size={14} className="text-[#1B2A4A]" />
                 <span>Live Sensitivity Test (Sample ¥1,500,000 Lot)</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-slate-700 pt-1">
@@ -212,11 +212,11 @@ export default function AdminSettings() {
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] block">Landed (incl GST):</span>
-                  <span className="font-black text-blue-900">NZ${sampleLandedNzd.toLocaleString()}</span>
+                  <span className="font-black text-[#1B2A4A]">NZ${sampleLandedNzd.toLocaleString()}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] block">Spread Delta:</span>
-                  <span className="font-black text-emerald-700">Healthy</span>
+                  <span className="font-black text-emerald-700">Healthy Arbitrage</span>
                 </div>
               </div>
             </div>

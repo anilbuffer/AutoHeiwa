@@ -6,7 +6,6 @@ import Link from "next/link";
 import { 
   ArrowRight, 
   Search, 
-  SlidersHorizontal, 
   ChevronDown, 
   Sparkles, 
   Clock, 
@@ -17,7 +16,8 @@ import {
   CheckCircle2,
   DollarSign,
   Car as CarIcon,
-  Flame
+  Flame,
+  RotateCcw
 } from "lucide-react";
 import { VEHICLES } from "@/lib/data";
 
@@ -52,6 +52,14 @@ export default function VehiclesPage() {
     });
   }, [searchTerm, selectedMake, selectedStatus, selectedFuel, sortBy]);
 
+  const resetFilters = () => {
+    setSearchTerm("");
+    setSelectedMake("All");
+    setSelectedStatus("All");
+    setSelectedFuel("All");
+    setSortBy("score");
+  };
+
   const makes = ["All", "Toyota", "Honda", "Mazda", "Nissan", "Lexus"];
 
   return (
@@ -59,10 +67,10 @@ export default function VehiclesPage() {
       <div className="space-y-6 pb-12">
         
         {/* Page Header */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-slate-100 text-slate-700">
+              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#1B2A4A]/10 text-[#1B2A4A]">
                 Japanese Auction Pipeline
               </span>
               <span className="text-xs font-semibold text-emerald-600 flex items-center gap-1">
@@ -108,7 +116,7 @@ export default function VehiclesPage() {
         </div>
 
         {/* Filter & Search Bar */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-4">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
             {/* Search Input */}
             <div className="md:col-span-2 relative">
@@ -118,7 +126,7 @@ export default function VehiclesPage() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search by make, model, lot #, badge or VIN..."
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20 text-xs font-medium outline-none transition-all placeholder:text-slate-400"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#B30D12] focus:ring-2 focus:ring-[#B30D12]/20 text-xs font-medium outline-none transition-all placeholder:text-slate-400"
               />
             </div>
 
@@ -127,7 +135,7 @@ export default function VehiclesPage() {
               <select
                 value={selectedMake}
                 onChange={(e) => setSelectedMake(e.target.value)}
-                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-red-500 text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
+                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#B30D12] text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
               >
                 {makes.map(m => (
                   <option key={m} value={m}>{m === "All" ? "All Makes" : m}</option>
@@ -141,7 +149,7 @@ export default function VehiclesPage() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-red-500 text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
+                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#B30D12] text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
               >
                 <option value="score">Sort: AI Score (Highest)</option>
                 <option value="priceAsc">Sort: Landed Cost (Lowest)</option>
@@ -162,7 +170,7 @@ export default function VehiclesPage() {
                   onClick={() => setSelectedStatus(st)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                     selectedStatus === st
-                      ? "bg-slate-900 text-white shadow-xs"
+                      ? "bg-[#1B2A4A] text-white shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
@@ -179,13 +187,22 @@ export default function VehiclesPage() {
                   onClick={() => setSelectedFuel(f)}
                   className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                     selectedFuel === f
-                      ? "bg-slate-900 text-white shadow-xs"
+                      ? "bg-[#1B2A4A] text-white shadow-xs"
                       : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                   }`}
                 >
                   {f}
                 </button>
               ))}
+
+              {(searchTerm || selectedMake !== "All" || selectedStatus !== "All" || selectedFuel !== "All") && (
+                <button
+                  onClick={resetFilters}
+                  className="px-2.5 py-1 text-xs text-red-600 hover:text-red-700 font-bold flex items-center gap-1 transition-colors"
+                >
+                  <RotateCcw size={12} /> Reset
+                </button>
+              )}
             </div>
 
             <div className="text-xs font-bold text-slate-500">
@@ -209,18 +226,18 @@ export default function VehiclesPage() {
                     alt={`${vehicle.make} ${vehicle.model}`} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/25" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1322]/80 via-transparent to-black/25" />
                   
                   {/* Grade Stamp */}
                   <div className="absolute top-3 left-3">
-                    <span className="px-2.5 py-1 bg-slate-900/90 backdrop-blur-md text-white font-extrabold text-[11px] rounded-lg border border-white/20 shadow-sm">
+                    <span className="px-2.5 py-1 bg-[#0B1322]/90 backdrop-blur-md text-white font-extrabold text-[11px] rounded-lg border border-white/20 shadow-sm">
                       GRADE {vehicle.grade} / {vehicle.interiorGrade}
                     </span>
                   </div>
 
                   {/* Countdown Timer */}
                   <div className="absolute top-3 right-3">
-                    <span className="px-2.5 py-1 bg-red-600/95 backdrop-blur-md text-white font-bold text-[11px] rounded-lg flex items-center gap-1 shadow-sm">
+                    <span className="px-2.5 py-1 bg-[#B30D12] text-white font-bold text-[11px] rounded-lg flex items-center gap-1 shadow-sm">
                       <Clock size={11} /> {vehicle.timeLeft}
                     </span>
                   </div>
@@ -239,7 +256,7 @@ export default function VehiclesPage() {
                   <div>
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <h3 className="text-base font-black text-slate-900 group-hover:text-red-600 transition-colors">
+                        <h3 className="text-base font-black text-slate-900 group-hover:text-[#B30D12] transition-colors">
                           {vehicle.year} {vehicle.make} {vehicle.model}
                         </h3>
                         <p className="text-xs font-semibold text-slate-500 mt-0.5">
@@ -289,14 +306,14 @@ export default function VehiclesPage() {
                   <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
                     <div>
                       <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Max Rec. Bid</span>
-                      <span className="text-lg font-black text-red-600 block">
+                      <span className="text-lg font-black text-[#B30D12] block">
                         NZ${(vehicle.maxBidNzd).toLocaleString()}
                       </span>
                     </div>
 
                     <Link 
                       href={`/vehicles/${vehicle.id}`} 
-                      className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
+                      className="px-4 py-2 bg-[#1B2A4A] hover:bg-[#0B1322] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
                     >
                       Calculate <ArrowRight size={13} />
                     </Link>
@@ -356,7 +373,7 @@ export default function VehiclesPage() {
                       <td className="px-5 py-4 font-bold text-slate-900">
                         NZ${(v.estRetailNzd).toLocaleString()}
                       </td>
-                      <td className="px-5 py-4 font-black text-red-600">
+                      <td className="px-5 py-4 font-black text-[#B30D12]">
                         NZ${(v.maxBidNzd).toLocaleString()}
                       </td>
                       <td className="px-5 py-4">
@@ -369,7 +386,7 @@ export default function VehiclesPage() {
                       <td className="px-5 py-4 text-right">
                         <Link 
                           href={`/vehicles/${v.id}`} 
-                          className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"
+                          className="px-3 py-1.5 bg-[#1B2A4A] hover:bg-[#0B1322] text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"
                         >
                           Bid <ArrowRight size={12} />
                         </Link>

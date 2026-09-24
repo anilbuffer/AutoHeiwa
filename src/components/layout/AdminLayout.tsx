@@ -63,31 +63,31 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="flex h-screen bg-[#F1F5F9] text-slate-800 font-sans antialiased overflow-hidden">
+    <div className="flex h-screen bg-[#F6F8FB] text-slate-800 font-sans antialiased overflow-hidden">
       {/* Mobile Backdrop */}
       {mobileMenuOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed inset-0 bg-[#0B1322]/70 backdrop-blur-sm z-40 md:hidden"
           onClick={() => setMobileMenuOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Deep Navy */}
       <aside className={`
-        fixed md:static inset-y-0 left-0 z-50 w-[275px] bg-[#090D16] text-slate-300 flex flex-col justify-between shrink-0 border-r border-slate-800/90 transition-transform duration-300 ease-in-out
+        fixed md:static inset-y-0 left-0 z-50 w-[275px] bg-[#0B1322] text-slate-300 flex flex-col justify-between shrink-0 border-r border-[#1B2A4A]/70 transition-transform duration-300 ease-in-out
         ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
       `}>
         <div>
           {/* Logo & Header */}
-          <div className="h-[76px] flex items-center justify-between px-5 border-b border-slate-800/80 bg-[#060910]">
+          <div className="h-[76px] flex items-center justify-between px-5 border-b border-[#1B2A4A]/80 bg-[#080E1A]">
             <Link href="/admin" className="flex items-center gap-3 group">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center shadow-lg shadow-blue-950/50 group-hover:scale-105 transition-transform">
+              <div className="w-9 h-9 rounded-xl bg-[#1B2A4A] flex items-center justify-center shadow-lg shadow-blue-950/50 group-hover:scale-105 transition-transform border border-[#2B406B]">
                 <Shield size={20} className="text-white" />
               </div>
               <div>
                 <div className="flex items-center gap-1.5">
                   <span className="text-[15px] font-black text-white tracking-wider leading-none">AUTOHEIWA</span>
-                  <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">OPS</span>
+                  <span className="text-[9px] px-1.5 py-0.5 rounded font-bold bg-[#B30D12] text-white border border-[#B30D12]">OPS</span>
                 </div>
                 <span className="block text-[10px] font-semibold text-slate-400 tracking-widest mt-1">BROKER & ADMIN</span>
               </div>
@@ -101,16 +101,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           {/* Quick Portal Switcher Banner */}
-          <div className="p-3 mx-3 mt-3 bg-slate-900/80 rounded-xl border border-blue-900/30">
+          <div className="p-3 mx-3 mt-3 bg-[#111C30] rounded-xl border border-[#1B2A4A]">
             <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-1.5 px-1">
               <span>ADMIN PLATFORM</span>
-              <span className="inline-flex items-center gap-1 text-blue-400">
+              <span className="inline-flex items-center gap-1 text-blue-400 font-bold">
                 <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> Root Access
               </span>
             </div>
             <Link 
               href="/" 
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-slate-800/70 hover:bg-slate-700/80 text-slate-200 text-xs font-semibold border border-slate-700 transition-colors group"
+              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#0B1322] hover:bg-[#1B2A4A] text-slate-200 text-xs font-semibold border border-[#1B2A4A] transition-colors group"
             >
               <span className="flex items-center gap-1.5">
                 <Building2 size={14} className="text-emerald-400" /> Switch to Dealer Portal
@@ -120,7 +120,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </div>
 
           {/* Live Scraper Engine Status */}
-          <div className="px-4 py-2 mx-3 mt-2 flex items-center justify-between bg-slate-900/50 rounded-lg border border-slate-800 text-[11px]">
+          <div className="px-4 py-2 mx-3 mt-2 flex items-center justify-between bg-[#0E182A] rounded-lg border border-[#1B2A4A]/60 text-[11px]">
             <div className="flex items-center gap-1.5 text-slate-300 font-medium">
               <Database size={12} className="text-blue-400" />
               <span>Auction Feeds:</span>
@@ -150,16 +150,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   onClick={() => setMobileMenuOpen(false)}
                   className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-[13px] font-semibold transition-all ${
                     isActive
-                      ? 'bg-gradient-to-r from-blue-600/20 to-blue-600/5 text-white border-l-4 border-blue-500 font-bold shadow-sm'
-                      : 'text-slate-400 hover:bg-slate-800/60 hover:text-slate-100'
+                      ? 'bg-gradient-to-r from-[#B30D12]/25 to-[#B30D12]/5 text-white border-l-4 border-[#B30D12] font-bold shadow-sm'
+                      : 'text-slate-400 hover:bg-[#111C30] hover:text-slate-100'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon size={18} className={isActive ? 'text-blue-400' : 'text-slate-400'} />
+                    <Icon size={18} className={isActive ? 'text-[#e56168]' : 'text-slate-400'} />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
+                    <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#1B2A4A] text-blue-200 border border-[#2B406B]">
                       {item.badge}
                     </span>
                   )}
@@ -169,7 +169,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           </nav>
 
           {/* System Telemetry & Pipeline */}
-          <div className="mx-3 mt-6 p-3 bg-slate-900/40 rounded-xl border border-slate-800/60 text-xs">
+          <div className="mx-3 mt-6 p-3 bg-[#0E182A] rounded-xl border border-[#1B2A4A]/60 text-xs">
             <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
               Platform Metrics
             </div>
@@ -191,9 +191,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
 
         {/* Super Admin Footer */}
-        <div className="p-3 m-3 bg-[#060910] rounded-xl border border-slate-800 flex items-center justify-between">
+        <div className="p-3 m-3 bg-[#080E1A] rounded-xl border border-[#1B2A4A] flex items-center justify-between">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-slate-800 to-slate-700 text-white flex items-center justify-center font-bold text-sm shrink-0 border border-slate-700">
+            <div className="w-9 h-9 rounded-xl bg-[#1B2A4A] text-white flex items-center justify-center font-bold text-sm shrink-0 border border-[#2B406B]">
               AD
             </div>
             <div className="min-w-0">
@@ -204,7 +204,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Link 
             href="/login" 
             title="Switch User / Logout"
-            className="p-1.5 text-slate-400 hover:text-white hover:bg-slate-800 rounded-lg transition-colors"
+            className="p-1.5 text-slate-400 hover:text-white hover:bg-[#1B2A4A] rounded-lg transition-colors"
           >
             <ExternalLink size={14} />
           </Link>
@@ -214,7 +214,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       {/* Main Content Viewport */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header Bar */}
-        <header className="h-[72px] bg-white border-b border-slate-200 px-4 sm:px-8 flex items-center justify-between shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-20">
+        <header className="h-[72px] bg-white border-b border-slate-200/90 px-4 sm:px-8 flex items-center justify-between shrink-0 shadow-[0_1px_3px_rgba(0,0,0,0.02)] z-20">
           <div className="flex items-center gap-3 min-w-0">
             <button 
               onClick={() => setMobileMenuOpen(true)}
@@ -236,8 +236,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               </div>
               <div className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
                 Command Center 
-                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
-                  <Shield size={11} /> Brokerage Super Admin
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                  <Shield size={11} className="text-[#B30D12]" /> Brokerage Super Admin
                 </span>
               </div>
             </div>
@@ -251,7 +251,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <input 
                 type="text" 
                 placeholder="Search dealers, VINs, lot numbers, makes..." 
-                className="pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 outline-none transition-all w-[300px] text-xs placeholder:text-slate-400 font-medium"
+                className="pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#1B2A4A] focus:ring-2 focus:ring-[#1B2A4A]/20 outline-none transition-all w-[300px] text-xs placeholder:text-slate-400 font-medium"
               />
               <span className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-white border border-slate-200 text-slate-400 rounded px-1.5 py-0.5 text-[10px] font-bold shadow-2xs">
                 ⌘K
@@ -261,7 +261,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Switch to Dealer Quick Pill */}
             <Link 
               href="/"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold border border-slate-200 transition-colors"
+              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 transition-colors"
             >
               <Building2 size={14} className="text-emerald-600" />
               <span>Dealer View</span>
@@ -270,7 +270,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Notification Bell */}
             <button className="relative p-2.5 text-slate-600 hover:text-slate-900 transition-colors border border-slate-200 rounded-xl hover:bg-slate-50 bg-white">
               <Bell size={18} />
-              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-blue-600 rounded-full border-2 border-white shadow-xs"></span>
+              <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#B30D12] rounded-full border-2 border-white shadow-xs"></span>
             </button>
 
             {/* Settings Quick Icon */}
@@ -285,7 +285,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </header>
 
         {/* Scrollable Page Canvas */}
-        <main className="flex-1 overflow-y-auto bg-[#F1F5F9] p-4 sm:p-7 lg:p-9">
+        <main className="flex-1 overflow-y-auto bg-[#F6F8FB] p-4 sm:p-7 lg:p-9">
           <div className="max-w-[1520px] mx-auto">
             {children}
           </div>

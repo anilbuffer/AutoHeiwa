@@ -17,12 +17,13 @@ import {
   HelpCircle,
   FileCheck2,
   Calendar,
-  Layers
+  Layers,
+  Download,
+  X
 } from "lucide-react";
 import { VEHICLES, GLOBAL_SETTINGS } from "@/lib/data";
 
 export default function VehicleDetail({ params }: { params: { id: string } }) {
-  // Find vehicle by ID or default to first
   const vehicleId = parseInt(params?.id) || 1;
   const vehicle = VEHICLES.find(v => v.id === vehicleId) || VEHICLES[0];
 
@@ -30,6 +31,8 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
   const [fobJpy, setFobJpy] = useState(vehicle.fobJpy);
   const [targetMargin, setTargetMargin] = useState(vehicle.targetMarginNzd);
   const [bidPlaced, setBidPlaced] = useState(false);
+  const [activePhoto, setActivePhoto] = useState(vehicle.image);
+  const [pdfToast, setPdfToast] = useState(false);
 
   // Dynamic calculations based on live inputs
   const fxRate = GLOBAL_SETTINGS.fxRateJpyNzd;
@@ -42,6 +45,11 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
   const maxBidNzd = vehicle.estRetailNzd - targetMargin;
   const maxBidJpy = Math.round((maxBidNzd - freightNzd - complianceNzd - (maxBidNzd * 0.13)) * fxRate);
   const profitMarginPercent = Math.round((targetMargin / totalLandedCost) * 100);
+
+  const handleDownloadSheet = () => {
+    setPdfToast(true);
+    setTimeout(() => setPdfToast(false), 3000);
+  };
 
   return (
     <AppLayout>
@@ -64,8 +72,21 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
           </div>
         </div>
 
+        {/* PDF Download Toast Notification */}
+        {pdfToast && (
+          <div className="p-4 rounded-xl bg-[#1B2A4A] text-white text-xs font-bold flex items-center justify-between shadow-lg animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="flex items-center gap-2">
+              <Download size={16} className="text-emerald-400" />
+              <span>Japanese USS Auction Inspection Sheet downloaded for Lot #{vehicle.lotNumber} (Verified Grade {vehicle.grade})</span>
+            </div>
+            <button onClick={() => setPdfToast(false)} className="text-slate-400 hover:text-white">
+              <X size={14} />
+            </button>
+          </div>
+        )}
+
         {/* Vehicle Header Brief */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
@@ -74,7 +95,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">
                 Grade {vehicle.grade} / {vehicle.interiorGrade}
               </span>
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200 flex items-center gap-1">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#B30D12]/10 text-[#B30D12] border border-[#B30D12]/30 flex items-center gap-1">
                 <Clock size={12} /> {vehicle.timeLeft} left
               </span>
             </div>
@@ -90,7 +111,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
           <div className="flex items-center gap-3">
             <div className="text-right">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Recommended Max Bid</span>
-              <span className="text-2xl font-black text-red-600 block">
+              <span className="text-2xl font-black text-[#B30D12] block">
                 NZ${maxBidNzd.toLocaleString()}
               </span>
               <span className="text-[11px] text-slate-400 font-mono">
@@ -104,18 +125,18 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Photo Gallery (2 Spans) */}
           <div className="lg:col-span-2 space-y-3">
-            <div className="h-[380px] rounded-2xl overflow-hidden relative shadow-sm border border-slate-200 bg-slate-900 group">
+            <div className="h-[380px] rounded-2xl overflow-hidden relative shadow-sm border border-slate-200 bg-[#0B1322] group">
               <img 
-                src={vehicle.image} 
+                src={activePhoto} 
                 alt={vehicle.model} 
                 className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" 
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0B1322]/70 via-transparent to-transparent pointer-events-none" />
               
               <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white">
                 <div className="flex items-center gap-2">
                   <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-lg font-bold border border-white/20">
-                    Photo 1 of 3 (Main Exterior)
+                    High-Definition Inspection Photo
                   </span>
                   <span className="bg-emerald-600/90 backdrop-blur-md px-2.5 py-1 rounded-lg font-bold">
                     Japanese ODO Verified
@@ -127,10 +148,18 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               </div>
             </div>
 
-            {/* Thumbnail Strip */}
+            {/* Thumbnail Strip with Interactive Selector */}
             <div className="grid grid-cols-3 gap-3">
               {vehicle.gallery.map((img, i) => (
-                <div key={i} className="h-24 rounded-xl overflow-hidden border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity">
+                <div 
+                  key={i} 
+                  onClick={() => setActivePhoto(img)}
+                  className={`h-24 rounded-xl overflow-hidden border cursor-pointer transition-all ${
+                    activePhoto === img 
+                      ? 'border-[#B30D12] ring-2 ring-[#B30D12]/40 scale-102' 
+                      : 'border-slate-200 hover:opacity-90'
+                  }`}
+                >
                   <img src={img} alt={`Angle ${i+1}`} className="w-full h-full object-cover" />
                 </div>
               ))}
@@ -167,31 +196,40 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
                 </div>
                 <div className="flex justify-between pt-2 border-t border-slate-200 font-bold">
                   <span className="text-slate-700">Recommended Max Bid</span>
-                  <span className="text-red-600 font-black">NZ${maxBidNzd.toLocaleString()}</span>
+                  <span className="text-[#B30D12] font-black">NZ${maxBidNzd.toLocaleString()}</span>
                 </div>
               </div>
             </div>
 
             <div className="mt-6 pt-4 border-t border-slate-100 space-y-2.5">
               {bidPlaced ? (
-                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-center animate-in fade-in duration-200">
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-center animate-in fade-in duration-200 space-y-2">
                   <p className="text-xs font-black text-emerald-800 flex items-center justify-center gap-1.5">
                     <CheckCircle2 size={16} className="text-emerald-600" /> Auto-Bid Registered!
                   </p>
-                  <p className="text-[11px] text-emerald-700 mt-1">
+                  <p className="text-[11px] text-emerald-700">
                     Broker proxy bid placed up to <strong>NZ${maxBidNzd.toLocaleString()}</strong> on USS Tokyo.
                   </p>
+                  <button 
+                    onClick={() => setBidPlaced(false)}
+                    className="text-[11px] font-bold text-slate-600 hover:text-slate-900 underline"
+                  >
+                    Cancel / Modify Bid
+                  </button>
                 </div>
               ) : (
                 <button 
                   onClick={() => setBidPlaced(true)}
-                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all shadow-sm hover:shadow"
+                  className="w-full py-3 bg-[#B30D12] hover:bg-[#940B0F] text-white font-bold text-xs rounded-xl transition-all shadow-sm hover:shadow"
                 >
                   Lock In Maximum Auto-Bid
                 </button>
               )}
 
-              <button className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5">
+              <button 
+                onClick={handleDownloadSheet}
+                className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5"
+              >
                 <FileCheck2 size={14} /> Download Japanese Inspection Sheet (PDF)
               </button>
             </div>
@@ -199,9 +237,9 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
         </div>
 
         {/* AI Valuation & Opportunity Intelligence Card */}
-        <div className="bg-gradient-to-r from-red-50/50 via-slate-50 to-blue-50/40 rounded-2xl border border-red-100 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+        <div className="bg-gradient-to-r from-red-50/40 via-slate-50 to-[#1B2A4A]/5 rounded-2xl border border-red-100 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
           <div className="flex items-start gap-4">
-            <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+            <div className="w-10 h-10 rounded-xl bg-[#B30D12] text-white flex items-center justify-center shrink-0 shadow-sm">
               <Sparkles size={20} />
             </div>
             <div className="space-y-2 flex-1">
@@ -236,7 +274,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
           <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6 sm:p-7 space-y-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                <div className="w-8 h-8 rounded-lg bg-[#1B2A4A]/10 text-[#1B2A4A] flex items-center justify-center font-bold">
                   <Calculator size={16} />
                 </div>
                 <div>
@@ -261,7 +299,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
                   step={20000}
                   value={fobJpy}
                   onChange={(e) => setFobJpy(parseInt(e.target.value))}
-                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-red-600"
+                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-[#B30D12]"
                 />
               </div>
 
@@ -304,7 +342,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
                 <span>Total Landed Cost to Auckland Yard</span>
                 <span className="text-sm">NZ${totalLandedCost.toLocaleString()}</span>
               </div>
-              <div className="flex justify-between font-extrabold text-red-600 pt-1 text-sm">
+              <div className="flex justify-between font-extrabold text-[#B30D12] pt-1 text-sm">
                 <span>Max Allowable Bid for Target Margin</span>
                 <span>NZ${maxBidNzd.toLocaleString()}</span>
               </div>
@@ -341,7 +379,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               <div className="absolute top-[42%] left-[60%] w-2.5 h-2.5 rounded-full bg-slate-400" title="Trade Me: NZ$23,990 (61k km)" />
               <div className="absolute top-[60%] left-[80%] w-2.5 h-2.5 rounded-full bg-slate-400" title="AutoTrader: NZ$21,500 (78k km)" />
 
-              {/* Target Vehicle Spot - Glowing Emerald Arbitrage Point */}
+              {/* Target Vehicle Spot - Glowing Arbitrage Point */}
               <div className="absolute top-[68%] left-[55%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
                 <span className="animate-ping absolute inline-flex h-6 w-6 rounded-full bg-emerald-400 opacity-60"></span>
                 <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md font-bold text-[10px] z-10">

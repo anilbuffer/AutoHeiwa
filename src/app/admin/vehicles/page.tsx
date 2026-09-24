@@ -43,10 +43,10 @@ export default function AdminVehicles() {
       <div className="space-y-6 pb-16">
         
         {/* Header */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <div className="flex items-center gap-2 mb-1">
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-[#1B2A4A]/10 text-[#1B2A4A] border border-[#1B2A4A]/20">
                 Brokerage Master Database
               </span>
             </div>
@@ -64,7 +64,7 @@ export default function AdminVehicles() {
         </div>
 
         {/* Filter Bar */}
-        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-3">
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-3">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div className="relative">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
@@ -73,7 +73,7 @@ export default function AdminVehicles() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search vehicle, VIN, lot #, auction house..." 
-                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 text-xs font-medium outline-none transition-all placeholder:text-slate-400"
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#1B2A4A] text-xs font-medium outline-none transition-all placeholder:text-slate-400"
               />
             </div>
 
@@ -81,7 +81,7 @@ export default function AdminVehicles() {
               <select
                 value={selectedDealer}
                 onChange={(e) => setSelectedDealer(e.target.value)}
-                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
+                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#1B2A4A] text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
               >
                 <option value="All">All Dealerships</option>
                 {DEALERS.map(d => (
@@ -95,7 +95,7 @@ export default function AdminVehicles() {
               <select
                 value={selectedStatus}
                 onChange={(e) => setSelectedStatus(e.target.value)}
-                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
+                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#1B2A4A] text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
               >
                 <option value="All">All Statuses</option>
                 <option value="Priority">Priority Buy Only</option>
@@ -156,7 +156,7 @@ export default function AdminVehicles() {
                     <td className="px-5 py-4 font-bold text-slate-900">
                       NZ${(v.estRetailNzd).toLocaleString()}
                     </td>
-                    <td className="px-5 py-4 font-black text-red-600">
+                    <td className="px-5 py-4 font-black text-[#B30D12]">
                       NZ${(v.maxBidNzd).toLocaleString()}
                     </td>
                     <td className="px-5 py-4">
@@ -171,7 +171,7 @@ export default function AdminVehicles() {
                     <td className="px-5 py-4 text-right">
                       <Link 
                         href={`/admin/vehicles/${v.id}`} 
-                        className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"
+                        className="px-3 py-1.5 bg-[#1B2A4A] hover:bg-[#0B1322] text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"
                       >
                         Inspect <ArrowRight size={12} />
                       </Link>
