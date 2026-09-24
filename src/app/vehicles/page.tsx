@@ -20,8 +20,12 @@ import {
   RotateCcw
 } from "lucide-react";
 import { VEHICLES } from "@/lib/data";
+import { useSyncStore } from "@/lib/syncStore";
+import { Bookmark, BookmarkCheck } from "lucide-react";
 
 export default function VehiclesPage() {
+  const { state: syncState, toggleShortlistVehicle } = useSyncStore();
+
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedMake, setSelectedMake] = useState("All");
   const [selectedStatus, setSelectedStatus] = useState("All");
@@ -44,13 +48,15 @@ export default function VehiclesPage() {
 
       return matchesSearch && matchesMake && matchesStatus && matchesFuel;
     }).sort((a, b) => {
+      const aLanded = Math.round(((a.fobJpy / syncState.fxRateJpyNzd) + syncState.freightPerUnitNzd + syncState.compliancePerUnitNzd) * 1.15);
+      const bLanded = Math.round(((b.fobJpy / syncState.fxRateJpyNzd) + syncState.freightPerUnitNzd + syncState.compliancePerUnitNzd) * 1.15);
       if (sortBy === "score") return b.score - a.score;
-      if (sortBy === "priceAsc") return a.landedNzd - b.landedNzd;
+      if (sortBy === "priceAsc") return aLanded - bLanded;
       if (sortBy === "yearDesc") return b.year - a.year;
       if (sortBy === "kmAsc") return a.km - b.km;
       return 0;
     });
-  }, [searchTerm, selectedMake, selectedStatus, selectedFuel, sortBy]);
+  }, [searchTerm, selectedMake, selectedStatus, selectedFuel, sortBy, syncState.fxRateJpyNzd, syncState.freightPerUnitNzd, syncState.compliancePerUnitNzd]);
 
   const resetFilters = () => {
     setSearchTerm("");
@@ -252,73 +258,106 @@ export default function VehiclesPage() {
                 </div>
 
                 {/* Content */}
-                <div className="p-5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <div className="flex items-start justify-between gap-2">
+                {(() => {
+                  const dynamicLanded = Math.round(((vehicle.fobJpy / syncState.fxRateJpyNzd) + syncState.freightPerUnitNzd + syncState.compliancePerUnitNzd) * 1.15);
+                  const dynamicMaxBid = Math.round(vehicle.estRetailNzd - dynamicLanded);
+                  const isWishlistMatch = syncState.dealerModels.some(m => vehicle.model.toLowerCase().includes(m.toLowerCase()));
+                  const isShortlisted = syncState.shortlistedVehicleIds.includes(vehicle.id);
+
+                  return (
+                    <div className="p-5 flex-1 flex flex-col justify-between">
                       <div>
-                        <h3 className="text-base font-black text-slate-900 group-hover:text-[#B30D12] transition-colors">
-                          {vehicle.year} {vehicle.make} {vehicle.model}
-                        </h3>
-                        <p className="text-xs font-semibold text-slate-500 mt-0.5">
-                          {vehicle.badge}
-                        </p>
+                        <div className="flex items-start justify-between gap-2">
+                          <div>
+                            <div className="flex items-center gap-1.5 mb-0.5">
+                              {isWishlistMatch && (
+                                <span className="px-2 py-0.5 rounded text-[10px] font-black uppercase tracking-wider bg-rose-50 text-[#B30D12] border border-rose-200">
+                                  Wishlist Match
+                                </span>
+                              )}
+                              <span className="text-[10px] font-bold text-slate-400">
+                                {vehicle.fuel}
+                              </span>
+                            </div>
+                            <h3 className="text-base font-black text-slate-900 group-hover:text-[#B30D12] transition-colors">
+                              {vehicle.year} {vehicle.make} {vehicle.model}
+                            </h3>
+                            <p className="text-xs font-semibold text-slate-500 mt-0.5">
+                              {vehicle.badge}
+                            </p>
+                          </div>
+
+                          {/* Score Badge & Shortlist Button */}
+                          <div className="flex items-center gap-1.5 shrink-0">
+                            <button
+                              onClick={() => toggleShortlistVehicle(vehicle.id)}
+                              className={`p-1.5 rounded-lg border transition-colors cursor-pointer ${
+                                isShortlisted 
+                                  ? 'bg-rose-50 text-[#B30D12] border-rose-200' 
+                                  : 'bg-slate-50 text-slate-400 border-slate-200 hover:text-slate-700'
+                              }`}
+                              title={isShortlisted ? 'Remove from shortlist' : 'Add to shortlist'}
+                            >
+                              {isShortlisted ? <BookmarkCheck size={14} /> : <Bookmark size={14} />}
+                            </button>
+
+                            <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold ${
+                              vehicle.status === 'Priority' 
+                                ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                                : vehicle.status === 'Consider' 
+                                ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                                : 'bg-slate-100 text-slate-600 border border-slate-200'
+                            }`}>
+                              <Sparkles size={11} />
+                              {vehicle.score}
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="text-[11px] text-slate-500 font-medium mt-2 flex items-center gap-2">
+                          <span>{(vehicle.km).toLocaleString()} km</span>
+                          <span>•</span>
+                          <span>{vehicle.engine}</span>
+                          <span>•</span>
+                          <span>{vehicle.color}</span>
+                        </div>
+
+                        {/* Financial Mini Stack */}
+                        <div className="grid grid-cols-2 gap-2 mt-4 p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                          <div>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Landed Cost</span>
+                            <span className="font-black text-slate-900 text-sm mt-0.5 block font-mono">
+                              NZ${dynamicLanded.toLocaleString()}
+                            </span>
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. Retail</span>
+                            <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono">
+                              NZ${(vehicle.estRetailNzd).toLocaleString()}
+                            </span>
+                          </div>
+                        </div>
                       </div>
 
-                      {/* Score Badge */}
-                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold shrink-0 ${
-                        vehicle.status === 'Priority' 
-                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
-                          : vehicle.status === 'Consider' 
-                          ? 'bg-amber-50 text-amber-700 border border-amber-200' 
-                          : 'bg-slate-100 text-slate-600 border border-slate-200'
-                      }`}>
-                        <Sparkles size={11} />
-                        {vehicle.score}
-                      </span>
-                    </div>
+                      {/* Card Bottom CTA */}
+                      <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. Margin Spread</span>
+                          <span className="text-base font-black text-emerald-700 block font-mono">
+                            +NZ${Math.max(1500, vehicle.estRetailNzd - dynamicLanded).toLocaleString()}
+                          </span>
+                        </div>
 
-                    <div className="text-[11px] text-slate-500 font-medium mt-2 flex items-center gap-2">
-                      <span>{(vehicle.km).toLocaleString()} km</span>
-                      <span>•</span>
-                      <span>{vehicle.engine}</span>
-                      <span>•</span>
-                      <span>{vehicle.color}</span>
-                    </div>
-
-                    {/* Financial Mini Stack */}
-                    <div className="grid grid-cols-2 gap-2 mt-4 p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
-                      <div>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Landed Cost</span>
-                        <span className="font-bold text-slate-900 text-sm mt-0.5 block">
-                          NZ${(vehicle.landedNzd).toLocaleString()}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. Retail</span>
-                        <span className="font-bold text-slate-900 text-sm mt-0.5 block">
-                          NZ${(vehicle.estRetailNzd).toLocaleString()}
-                        </span>
+                        <Link 
+                          href={`/vehicles/${vehicle.id}`} 
+                          className="px-4 py-2 bg-[#1B2A4A] hover:bg-[#0B1322] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
+                        >
+                          Calculate <ArrowRight size={13} />
+                        </Link>
                       </div>
                     </div>
-                  </div>
-
-                  {/* Card Bottom CTA */}
-                  <div className="pt-4 mt-4 border-t border-slate-100 flex items-center justify-between">
-                    <div>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Max Rec. Bid</span>
-                      <span className="text-lg font-black text-[#B30D12] block">
-                        NZ${(vehicle.maxBidNzd).toLocaleString()}
-                      </span>
-                    </div>
-
-                    <Link 
-                      href={`/vehicles/${vehicle.id}`} 
-                      className="px-4 py-2 bg-[#1B2A4A] hover:bg-[#0B1322] text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
-                    >
-                      Calculate <ArrowRight size={13} />
-                    </Link>
-                  </div>
-                </div>
+                  );
+                })()}
               </div>
             ))}
           </div>

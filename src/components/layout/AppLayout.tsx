@@ -24,12 +24,16 @@ import {
   Sparkles
 } from 'lucide-react';
 import { GLOBAL_SETTINGS } from '@/lib/data';
+import RoleSwitcher from './RoleSwitcher';
+import { useSyncStore } from '@/lib/syncStore';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  
+  const { state: syncState, markNotificationAsRead } = useSyncStore();
 
   const getBreadcrumbs = () => {
     if (pathname === '/') return [{ label: 'Dashboard', href: '/' }];
@@ -39,7 +43,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       { label: 'Vehicle Intelligence & Bid', href: pathname }
     ];
     if (pathname === '/profile') return [{ label: 'Dealer Profile & Criteria', href: '/profile' }];
-    if (pathname === '/help') return [{ label: 'Knowledge Base & Concierge', href: '/help' }];
     return [{ label: 'Dashboard', href: '/' }];
   };
 
@@ -47,7 +50,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
     { label: 'Overview', href: '/', icon: LayoutDashboard, badge: null },
     { label: 'Live Vehicles', href: '/vehicles', icon: Car, badge: '32 Lots' },
     { label: 'Buying Criteria', href: '/profile', icon: User, badge: null },
-    { label: 'Concierge & Help', href: '/help', icon: HelpCircle, badge: null },
   ];
 
   return (
@@ -112,7 +114,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             <div className="flex items-center gap-1.5 text-slate-300 font-medium">
               <TrendingUp size={12} className="text-emerald-400" />
               <span>¥ / NZ$:</span>
-              <span className="font-bold text-white">{GLOBAL_SETTINGS.fxRateJpyNzd}</span>
+              <span className="font-bold text-white">{syncState.fxRateJpyNzd}</span>
             </div>
             <span className="text-[10px] text-emerald-400 font-semibold bg-emerald-950/60 px-1.5 py-0.5 rounded border border-emerald-800/50">
               Live Feed
@@ -249,44 +251,54 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               </span>
             </div>
 
-            {/* Switch to Admin Quick Pill */}
-            <Link 
-              href="/admin"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 transition-colors"
-            >
-              <ShieldCheck size={14} className="text-[#1B2A4A]" />
-              <span>Admin View</span>
-            </Link>
+            {/* Quick Role Switcher */}
+            <RoleSwitcher />
 
             {/* Notification Bell */}
             <div className="relative">
               <button 
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
                 className="relative p-2.5 text-slate-600 hover:text-slate-900 transition-colors border border-slate-200 rounded-xl hover:bg-slate-50 bg-white"
+                title="Sourcing & Intelligence Alerts"
               >
                 <Bell size={18} />
-                <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#B30D12] rounded-full border-2 border-white shadow-xs"></span>
+                {syncState.dealerNotifications.some(n => !n.isRead) && (
+                  <span className="absolute top-1.5 right-1.5 w-2.5 h-2.5 bg-[#B30D12] rounded-full border-2 border-white shadow-xs animate-pulse"></span>
+                )}
               </button>
 
               {notificationsOpen && (
-                <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl border border-slate-200 shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="absolute right-0 mt-2 w-84 bg-white rounded-2xl border border-slate-200 shadow-xl p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
                   <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
-                    <span className="text-xs font-bold text-slate-900">Auction Intelligence Alerts</span>
-                    <span className="text-[10px] font-bold text-[#B30D12] bg-red-50 px-2 py-0.5 rounded-full">3 New</span>
+                    <span className="text-xs font-bold text-slate-900">Heiwa Sourcing & Auction Alerts</span>
+                    <span className="text-[10px] font-bold text-[#B30D12] bg-red-50 px-2 py-0.5 rounded-full">
+                      {syncState.dealerNotifications.filter(n => !n.isRead).length} New
+                    </span>
                   </div>
-                  <div className="space-y-2.5">
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-                      <p className="font-bold text-slate-800 flex items-center gap-1">
-                        <Sparkles size={12} className="text-[#B30D12]" /> Priority Buy Identified
-                      </p>
-                      <p className="text-slate-600 mt-0.5 text-[11px]">2019 Toyota Aqua S at USS Tokyo (Lot #40822) has NZ$4,000 spread.</p>
-                      <span className="text-[10px] text-slate-400 font-semibold mt-1 block">18 mins ago</span>
-                    </div>
-                    <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
-                      <p className="font-bold text-slate-800">FX Rate Improvement</p>
-                      <p className="text-slate-600 mt-0.5 text-[11px]">JPY/NZD moved to 91.24. Landed costs lowered by ~NZ$180 per unit.</p>
-                      <span className="text-[10px] text-slate-400 font-semibold mt-1 block">45 mins ago</span>
-                    </div>
+                  <div className="space-y-2.5 max-h-80 overflow-y-auto pr-1">
+                    {syncState.dealerNotifications.map((notif) => (
+                      <div 
+                        key={notif.id}
+                        onClick={() => markNotificationAsRead(notif.id)}
+                        className={`p-2.5 rounded-xl border text-xs transition-colors cursor-pointer ${
+                          notif.isRead 
+                            ? 'bg-slate-50/60 border-slate-100' 
+                            : 'bg-red-50/30 border-red-100 hover:bg-red-50/50'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <p className="font-bold text-slate-900 flex items-center gap-1.5">
+                            <Sparkles size={12} className={notif.type === 'sourcing_match' ? 'text-[#B30D12]' : 'text-emerald-600'} />
+                            <span>{notif.title}</span>
+                          </p>
+                          {!notif.isRead && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#B30D12]"></span>
+                          )}
+                        </div>
+                        <p className="text-slate-600 mt-1 text-[11px] leading-relaxed">{notif.body}</p>
+                        <span className="text-[10px] text-slate-400 font-semibold mt-1.5 block">{notif.timestamp}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
               )}

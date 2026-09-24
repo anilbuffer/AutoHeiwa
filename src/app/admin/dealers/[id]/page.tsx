@@ -17,10 +17,15 @@ import {
   CheckCircle2
 } from "lucide-react";
 import { DEALERS, VEHICLES } from "@/lib/data";
+import { useSyncStore } from "@/lib/syncStore";
 
 export default function AdminDealerProfile({ params }: { params: { id: string } }) {
   const dealerId = parseInt(params?.id) || 1;
   const dealer = DEALERS.find(d => d.id === dealerId) || DEALERS[0];
+  const { state: syncState } = useSyncStore();
+
+  const activeModels = dealer.id === 1 ? syncState.dealerModels : dealer.preferences.models;
+  const activeMakes = dealer.id === 1 ? syncState.dealerMakes : dealer.preferences.makes;
   const matchedVehicles = VEHICLES.filter(v => v.dealer === dealer.name);
 
   return (
@@ -75,7 +80,7 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
             <div>
               <span className="font-bold text-slate-400 uppercase tracking-wider block mb-2">Preferred Makes</span>
               <div className="flex flex-wrap gap-1.5">
-                {dealer.preferences.makes.map(m => (
+                {activeMakes.map(m => (
                   <span key={m} className="px-2.5 py-1 bg-slate-100 font-bold text-slate-800 rounded-lg">
                     {m}
                   </span>
@@ -84,9 +89,9 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
             </div>
 
             <div>
-              <span className="font-bold text-slate-400 uppercase tracking-wider block mb-2">Target Models</span>
+              <span className="font-bold text-slate-400 uppercase tracking-wider block mb-2">Target Models (Wish List)</span>
               <div className="flex flex-wrap gap-1.5">
-                {dealer.preferences.models.map(md => (
+                {activeModels.map(md => (
                   <span key={md} className="px-2.5 py-1 bg-red-50 font-bold text-[#B30D12] rounded-lg border border-red-100">
                     {md}
                   </span>

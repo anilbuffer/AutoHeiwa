@@ -21,9 +21,13 @@ import {
   ExternalLink
 } from "lucide-react";
 import { VEHICLES, GLOBAL_SETTINGS } from "@/lib/data";
+import { useSyncStore } from "@/lib/syncStore";
 
 export default function Dashboard() {
   const [filterTab, setFilterTab] = useState<'all' | 'priority' | 'under20k'>('all');
+  const { state: syncState, markNotificationAsRead } = useSyncStore();
+
+  const latestSourcingMatch = syncState.dealerNotifications.find(n => n.type === 'sourcing_match');
 
   const filteredVehicles = VEHICLES.filter(v => {
     if (filterTab === 'priority') return v.status === 'Priority';
@@ -57,8 +61,8 @@ export default function Dashboard() {
             <div className="px-3.5 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs">
               <span className="text-slate-500 font-medium block text-[10px]">CURRENT FX BENCHMARK</span>
               <span className="font-bold text-slate-900 flex items-center gap-1 font-mono">
-                1 NZD = {GLOBAL_SETTINGS.fxRateJpyNzd} JPY
-                <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1 rounded">▲ +0.3%</span>
+                1 NZD = {syncState.fxRateJpyNzd} JPY
+                <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1 rounded">▲ Live Feed</span>
               </span>
             </div>
             <Link
@@ -69,6 +73,41 @@ export default function Dashboard() {
             </Link>
           </div>
         </div>
+
+        {/* Real-Time Live Sourcing Match Alert Banner from Heiwa Tokyo */}
+        {latestSourcingMatch && !latestSourcingMatch.isRead && (
+          <div className="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-red-950 via-[#1B2A4A] to-[#0B1322] text-white border border-[#B30D12]/50 shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="flex items-start sm:items-center gap-3.5">
+              <div className="w-10 h-10 rounded-xl bg-[#B30D12] text-white flex items-center justify-center shrink-0 shadow-md">
+                <Sparkles size={20} className="animate-pulse" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-0.5">
+                  <span className="px-2 py-0.5 rounded font-black text-[10px] uppercase tracking-wider bg-white/20 text-red-200">
+                    Real-Time Sourcing Alert
+                  </span>
+                  <span className="text-xs text-slate-300 font-medium">From Heiwa Auto Japan Desk</span>
+                </div>
+                <h4 className="font-black text-sm sm:text-base text-white">
+                  {latestSourcingMatch.title}
+                </h4>
+                <p className="text-xs text-slate-300 mt-0.5">
+                  {latestSourcingMatch.body}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 self-start sm:self-center shrink-0">
+              <Link
+                href="/vehicles"
+                onClick={() => markNotificationAsRead(latestSourcingMatch.id)}
+                className="px-4 py-2 bg-[#B30D12] hover:bg-[#8B090E] text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5"
+              >
+                <span>Inspect Lot & Landed Cost</span>
+                <ArrowRight size={13} />
+              </Link>
+            </div>
+          </div>
+        )}
 
         {/* 4 Premium KPI Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">

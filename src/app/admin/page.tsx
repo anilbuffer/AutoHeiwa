@@ -2,343 +2,404 @@
 
 import React, { useState } from "react";
 import AdminLayout from "@/components/layout/AdminLayout";
-import Link from "next/link";
 import { 
-  ArrowRight, 
-  Shield, 
-  TrendingUp, 
   Users, 
-  Car, 
-  Database, 
+  Heart, 
+  Search, 
+  AlertTriangle, 
+  TrendingUp, 
+  Info, 
+  HelpCircle, 
   Sparkles, 
-  RefreshCw, 
-  CheckCircle2, 
+  Calendar, 
+  Filter, 
+  MapPin, 
   Layers, 
-  DollarSign, 
-  AlertCircle,
-  ExternalLink,
-  Sliders,
-  Building2
+  Clock, 
+  CheckCircle2, 
+  X,
+  Database,
+  Building2,
+  DollarSign
 } from "lucide-react";
-import { VEHICLES, DEALERS, GLOBAL_SETTINGS } from "@/lib/data";
+import { GLOBAL_SETTINGS } from "@/lib/data";
 
-export default function AdminDashboard() {
-  const [filterDealer, setFilterDealer] = useState<string>("All");
+// Subcomponents
+import DataSourceModal from "@/components/admin/DataSourceModal";
+import AiWeeklyBriefCard from "@/components/admin/AiWeeklyBriefCard";
+import MostWantedChart from "@/components/admin/MostWantedChart";
+import DemandTrendLineChart from "@/components/admin/DemandTrendLineChart";
+import RisingCoolingCards from "@/components/admin/RisingCoolingCards";
+import SupplyDemandGapTable from "@/components/admin/SupplyDemandGapTable";
+import UpcomingAuctionMatchSection from "@/components/admin/UpcomingAuctionMatchSection";
+import DemandByRegionChart from "@/components/admin/DemandByRegionChart";
+import { useSyncStore } from "@/lib/syncStore";
 
-  const recentLots = VEHICLES.filter(v => {
-    if (filterDealer === "All") return true;
-    return v.dealer === filterDealer;
-  });
+export default function DemandIntelligencePage() {
+  const { state: syncState } = useSyncStore();
+
+  // Filters State
+  const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d'>('30d');
+  const [selectedRegion, setSelectedRegion] = useState<string>('All');
+  const [selectedSegment, setSelectedSegment] = useState<string>('All');
+
+  // Modals & Toasts
+  const [isDataSourceModalOpen, setIsDataSourceModalOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    setTimeout(() => {
+      setToastMessage((current) => (current === message ? null : current));
+    }, 4500);
+  };
+
+  // KPI Calculations adjusted slightly by timeRange for dynamic demo feel
+  const kpiData = {
+    '7d': {
+      activeDealers: 138,
+      dealersTrend: '+12%',
+      activeWishLists: Math.max(280, syncState.activeWishListsCount - 23),
+      wishListsTrend: '+16%',
+      searches: 1420,
+      searchesTrend: '+28%',
+      unmetDemand: Math.max(850, syncState.unmetDemandCount - 140),
+      unmetTrend: '+9%',
+    },
+    '30d': {
+      activeDealers: 142,
+      dealersTrend: '+18%',
+      activeWishLists: syncState.activeWishListsCount,
+      wishListsTrend: '+24%',
+      searches: syncState.dealerSearchesCount,
+      searchesTrend: '+31%',
+      unmetDemand: syncState.unmetDemandCount,
+      unmetTrend: '+12%',
+    },
+    '90d': {
+      activeDealers: 154,
+      dealersTrend: '+22%',
+      activeWishLists: syncState.activeWishListsCount + 44,
+      wishListsTrend: '+29%',
+      searches: syncState.dealerSearchesCount * 3,
+      searchesTrend: '+42%',
+      unmetDemand: syncState.unmetDemandCount + 220,
+      unmetTrend: '+15%',
+    }
+  }[timeRange];
+
+  const regionsList = ['All', 'Auckland', 'Waikato', 'Wellington', 'Canterbury', 'Otago'];
+  const segmentsList = ['All', 'Hybrid', 'SUV', 'Compact', 'Sedan/Wagon'];
 
   return (
     <AdminLayout>
-      <div className="space-y-8 pb-16">
+      <div className="space-y-8 pb-20">
         
-        {/* Admin Header Briefing */}
-        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5">
-              <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-[#1B2A4A]/10 text-[#1B2A4A] border border-[#1B2A4A]/20">
-                Broker Command Operations
-              </span>
-              <span className="text-xs text-slate-400 font-medium">AutoHeiwa Enterprise Platform</span>
+        {/* Floating Action Toast Notification */}
+        {toastMessage && (
+          <div className="fixed bottom-6 right-6 z-50 animate-in fade-in slide-in-from-bottom-4 duration-200">
+            <div className="bg-[#0B1322] text-white px-5 py-3.5 rounded-2xl shadow-2xl border border-slate-700 flex items-center gap-3 text-xs font-semibold">
+              <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 border border-emerald-500/30">
+                <CheckCircle2 size={14} />
+              </div>
+              <span>{toastMessage}</span>
+              <button 
+                onClick={() => setToastMessage(null)}
+                className="text-slate-400 hover:text-white ml-2 p-1"
+              >
+                <X size={14} />
+              </button>
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Platform & Dealer Operations
-            </h1>
-            <p className="text-slate-500 text-sm font-medium mt-0.5">
-              Real-time monitoring of 48,000+ Japanese auction lots, dealer match algorithms, and FX landed pricing.
-            </p>
+          </div>
+        )}
+
+        {/* 1. Header & Filters Section */}
+        <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+            <div>
+              {/* Badge & Info Tooltip Trigger */}
+              <div className="flex flex-wrap items-center gap-2 mb-2">
+                <span className="px-3 py-0.5 rounded-full text-[11px] font-black uppercase tracking-wider bg-[#B30D12]/10 text-[#B30D12] border border-[#B30D12]/20 shadow-2xs">
+                  Autohub & Heiwa Sourcing Intelligence
+                </span>
+                
+                {/* Where the data comes from info button */}
+                <button
+                  onClick={() => setIsDataSourceModalOpen(true)}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 border border-slate-200 transition-colors cursor-pointer group"
+                  title="Where does this data come from?"
+                >
+                  <Info size={12} className="text-blue-600 group-hover:scale-110 transition-transform" />
+                  <span>Data Sources & Telemetry</span>
+                </button>
+              </div>
+
+              {/* Page Title & Subtitle */}
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight">
+                Demand Intelligence
+              </h1>
+              <p className="text-slate-600 text-sm sm:text-base font-medium mt-1 max-w-3xl">
+                What NZ dealers are looking for, and what Heiwa should source next.
+              </p>
+            </div>
+
+            {/* Live FX & Currency Context */}
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
+              <div className="px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
+                <span className="text-slate-400 font-bold block text-[10px] uppercase tracking-wider">
+                  GLOBAL FX SETTING
+                </span>
+                <span className="font-black text-slate-900 text-sm flex items-center gap-1 font-mono">
+                  1 NZD = {syncState.fxRateJpyNzd} JPY
+                  <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                    Live Feed
+                  </span>
+                </span>
+              </div>
+
+              <div className="px-4 py-2.5 bg-slate-50 rounded-2xl border border-slate-200 text-xs">
+                <span className="text-slate-400 font-bold block text-[10px] uppercase tracking-wider">
+                  PRE-AUCTION BATCH
+                </span>
+                <span className="font-black text-blue-900 text-sm flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse"></span>
+                  USS Tokyo Dispatch #39
+                </span>
+              </div>
+            </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <div className="px-3.5 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs">
-              <span className="text-slate-400 font-medium block text-[10px]">GLOBAL FX BASELINE</span>
-              <span className="font-bold text-slate-900 flex items-center gap-1 font-mono">
-                1 NZD = {GLOBAL_SETTINGS.fxRateJpyNzd} JPY
-                <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1 rounded">Synced</span>
-              </span>
+          {/* Filters Bar: Time Range, NZ Region, Vehicle Segment */}
+          <div className="pt-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+              
+              {/* Time Range Filter */}
+              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-2xl border border-slate-200 text-xs font-bold">
+                <span className="text-slate-400 pl-2 text-[10px] font-bold uppercase tracking-wider hidden sm:inline">
+                  Time:
+                </span>
+                <button
+                  onClick={() => setTimeRange('7d')}
+                  className={`px-3 py-1.5 rounded-xl transition-all ${
+                    timeRange === '7d' 
+                      ? 'bg-white text-slate-900 shadow-2xs font-black' 
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Last 7 days
+                </button>
+                <button
+                  onClick={() => setTimeRange('30d')}
+                  className={`px-3 py-1.5 rounded-xl transition-all ${
+                    timeRange === '30d' 
+                      ? 'bg-white text-slate-900 shadow-2xs font-black' 
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  30 days
+                </button>
+                <button
+                  onClick={() => setTimeRange('90d')}
+                  className={`px-3 py-1.5 rounded-xl transition-all ${
+                    timeRange === '90d' 
+                      ? 'bg-white text-slate-900 shadow-2xs font-black' 
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  90 days
+                </button>
+              </div>
+
+              {/* NZ Region Dropdown / Selector */}
+              <div className="flex items-center gap-1.5 text-xs font-bold">
+                <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider hidden lg:inline">
+                  Region:
+                </span>
+                <select
+                  value={selectedRegion}
+                  onChange={(e) => setSelectedRegion(e.target.value)}
+                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold text-xs focus:bg-white focus:border-[#1B2A4A] outline-none cursor-pointer"
+                >
+                  {regionsList.map(r => (
+                    <option key={r} value={r}>Region: {r}</option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Vehicle Segment Dropdown / Selector */}
+              <div className="flex items-center gap-1.5 text-xs font-bold">
+                <span className="text-slate-400 text-[11px] font-bold uppercase tracking-wider hidden lg:inline">
+                  Segment:
+                </span>
+                <select
+                  value={selectedSegment}
+                  onChange={(e) => setSelectedSegment(e.target.value)}
+                  className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-bold text-xs focus:bg-white focus:border-[#1B2A4A] outline-none cursor-pointer"
+                >
+                  {segmentsList.map(s => (
+                    <option key={s} value={s}>Segment: {s}</option>
+                  ))}
+                </select>
+              </div>
+
             </div>
-            <Link 
-              href="/admin/settings"
-              className="px-4 py-2.5 bg-[#1B2A4A] hover:bg-[#0B1322] text-white rounded-xl text-xs font-bold transition-all shadow-xs flex items-center gap-1.5"
-            >
-              <Sliders size={14} /> Adjust Assumptions
-            </Link>
+
+            {/* Quick Filter Reset if active */}
+            {(selectedRegion !== 'All' || selectedSegment !== 'All' || timeRange !== '30d') && (
+              <button
+                onClick={() => {
+                  setSelectedRegion('All');
+                  setSelectedSegment('All');
+                  setTimeRange('30d');
+                }}
+                className="text-xs font-bold text-[#B30D12] hover:underline self-end md:self-center"
+              >
+                Reset Filters
+              </button>
+            )}
           </div>
         </div>
 
-        {/* 4 Hero KPI Cards */}
+        {/* 2. KPI Cards (4 in a row) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {/* Card 1 */}
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+          {/* Card 1: Active Dealers */}
+          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Live Scraped Lots</span>
-              <div className="w-8 h-8 rounded-lg bg-slate-100 text-[#1B2A4A] flex items-center justify-center font-bold text-xs">
-                <Database size={16} />
-              </div>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 tracking-tight">48,250</span>
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">4 Feeds Online</span>
-            </div>
-            <p className="text-xs text-slate-500 mt-2 font-medium">USS Tokyo, Yokohama, CAA & HAA</p>
-          </div>
-
-          {/* Card 2 */}
-          <div className="bg-gradient-to-br from-white to-emerald-50/30 p-5 sm:p-6 rounded-2xl border border-emerald-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Priority Margin Flags</span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
-                <Sparkles size={16} />
-              </div>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-emerald-700 tracking-tight">09</span>
-              <span className="text-xs font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded">High Spread</span>
-            </div>
-            <p className="text-xs text-slate-600 mt-2 font-medium">Spread exceeds NZ$3,500 target</p>
-          </div>
-
-          {/* Card 3 */}
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Active Dealerships</span>
-              <div className="w-8 h-8 rounded-lg bg-[#1B2A4A]/10 text-[#1B2A4A] flex items-center justify-center font-bold text-xs">
+              <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                Active Dealers
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center font-bold text-xs border border-blue-100">
                 <Users size={16} />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 tracking-tight">03</span>
-              <span className="text-xs font-bold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded">100% Active</span>
+              <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                {kpiData.activeDealers}
+              </span>
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-0.5">
+                <TrendingUp size={11} /> {kpiData.dealersTrend}
+              </span>
             </div>
-            <p className="text-xs text-slate-500 mt-2 font-medium">Auckland, Hamilton & Christchurch</p>
+            <p className="text-xs text-slate-500 mt-2 font-medium">
+              Dealerships with active telemetry & buying criteria
+            </p>
           </div>
 
-          {/* Card 4 */}
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+          {/* Card 2: Active Wish Lists */}
+          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Gross Dealer Margin</span>
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold text-xs">
-                <DollarSign size={16} />
+              <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                Active Wish Lists
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center font-bold text-xs border border-rose-100">
+                <Heart size={16} />
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 tracking-tight">NZ$284k</span>
+              <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                {kpiData.activeWishLists}
+              </span>
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-0.5">
+                <TrendingUp size={11} /> {kpiData.wishListsTrend}
+              </span>
             </div>
-            <p className="text-xs text-slate-500 mt-2 font-medium">Projected total dealer profit pipeline</p>
+            <p className="text-xs text-slate-500 mt-2 font-medium">
+              Avg 2.2 target vehicle profiles per dealership
+            </p>
+          </div>
+
+          {/* Card 3: Dealer Searches This Month */}
+          <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">
+                Dealer Searches This Month
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center font-bold text-xs border border-purple-100">
+                <Search size={16} />
+              </div>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
+                {kpiData.searches.toLocaleString()}
+              </span>
+              <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-0.5">
+                <TrendingUp size={11} /> {kpiData.searchesTrend}
+              </span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2 font-medium">
+              Natural language queries & vehicle filters logged
+            </p>
+          </div>
+
+          {/* Card 4: Unmet Demand */}
+          <div className="bg-gradient-to-br from-white to-red-50/40 p-5 sm:p-6 rounded-3xl border border-red-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-black text-[#B30D12] uppercase tracking-wider">
+                Unmet Demand
+              </span>
+              <div className="w-8 h-8 rounded-xl bg-red-100 text-[#B30D12] flex items-center justify-center font-bold text-xs">
+                <AlertTriangle size={16} />
+              </div>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl sm:text-4xl font-black text-[#B30D12] tracking-tight">
+                {kpiData.unmetDemand.toLocaleString()}
+              </span>
+              <span className="text-xs font-bold text-[#B30D12] bg-red-100/80 px-2 py-0.5 rounded-full border border-red-200 flex items-center gap-0.5">
+                <TrendingUp size={11} /> {kpiData.unmetTrend}
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 mt-2 font-medium">
+              Vehicles wanted but not currently in auction stock
+            </p>
           </div>
         </div>
 
-        {/* Main 2-Column Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          
-          {/* Opportunity Distribution & Feed Health (1 Span) */}
-          <div className="space-y-6">
-            
-            {/* Donut Chart Card */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-base font-black text-slate-900 tracking-tight">
-                  Opportunity Spread
-                </h2>
-                <span className="text-xs font-bold text-slate-400">Total 38 Qualified</span>
-              </div>
+        {/* 3. AI Weekly Brief (Hero Card, Full Width) */}
+        <AiWeeklyBriefCard onNotifyToast={showToast} />
 
-              {/* Minimalist SVG Gauge */}
-              <div className="flex justify-center my-6">
-                <div className="relative w-36 h-36">
-                  <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
-                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#E2E8F0" strokeWidth="16" />
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r="38" 
-                      fill="transparent" 
-                      stroke="#10B981" 
-                      strokeWidth="16" 
-                      strokeDasharray="238.7" 
-                      strokeDashoffset="180" 
-                      strokeLinecap="round"
-                    />
-                    <circle 
-                      cx="50" 
-                      cy="50" 
-                      r="38" 
-                      fill="transparent" 
-                      stroke="#F59E0B" 
-                      strokeWidth="16" 
-                      strokeDasharray="238.7" 
-                      strokeDashoffset="115" 
-                      strokeLinecap="round"
-                    />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center flex-col">
-                    <span className="text-2xl font-black text-slate-900 leading-none">38</span>
-                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Lots</span>
-                  </div>
-                </div>
-              </div>
+        {/* 7. Supply vs Demand Gap (Table, The Most Important Section) */}
+        {/* Placed prominently near the top as per design notes: "The AI Weekly Brief and the supply vs demand gap table should be the first things the eye lands on" */}
+        <SupplyDemandGapTable />
 
-              <div className="space-y-3 pt-2 text-xs">
-                <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-50/50 border border-emerald-100">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
-                    <span className="font-bold text-slate-800">Priority Buys (Score 90+)</span>
-                  </div>
-                  <span className="font-black text-emerald-700">09</span>
-                </div>
+        {/* 4. Most-Wanted Models & 5. Demand Trend (Two Columns) */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Section 4: Most-Wanted Models (Horizontal Bar Chart) */}
+          <MostWantedChart segmentFilter={selectedSegment} />
 
-                <div className="flex items-center justify-between p-2 rounded-xl bg-amber-50/50 border border-amber-100">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
-                    <span className="font-bold text-slate-800">Consider (Score 75-89)</span>
-                  </div>
-                  <span className="font-black text-amber-700">15</span>
-                </div>
+          {/* Section 5: Demand Trend (12-Week Multi-Line Chart) */}
+          <DemandTrendLineChart />
+        </div>
 
-                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
-                    <span className="font-bold text-slate-600">Review / Moderate</span>
-                  </div>
-                  <span className="font-black text-slate-700">14</span>
-                </div>
-              </div>
-            </div>
+        {/* 6. Rising and Falling Demand (Two Side-by-Side Cards) */}
+        <RisingCoolingCards />
 
-            {/* Dealership Pipeline Summary */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6 space-y-4">
-              <div className="flex items-center justify-between">
-                <h3 className="text-base font-black text-slate-900">Dealer Allocation</h3>
-                <Link href="/admin/dealers" className="text-xs font-bold text-[#B30D12] hover:underline">
-                  View All →
-                </Link>
-              </div>
+        {/* 8. Upcoming Auction: Dealer Match and Notify */}
+        <UpcomingAuctionMatchSection onNotifyToast={showToast} />
 
-              <div className="space-y-3">
-                {DEALERS.map((dealer) => (
-                  <div key={dealer.id} className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="font-black text-slate-900">{dealer.name}</span>
-                      <span className="text-[10px] font-bold text-[#1B2A4A] bg-[#1B2A4A]/10 px-2 py-0.5 rounded">
-                        {dealer.tier}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-slate-500 mt-2 text-[11px]">
-                      <span>{dealer.activeOpportunities} Active Matches</span>
-                      <span className="font-bold text-emerald-600">{dealer.priorityBuys} Priority</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* 9. Demand by Region (Bar Chart) */}
+        <DemandByRegionChart 
+          selectedRegion={selectedRegion}
+          onSelectRegion={setSelectedRegion}
+        />
 
+        {/* Data Source Explanation Modal */}
+        <DataSourceModal
+          isOpen={isDataSourceModalOpen}
+          onClose={() => setIsDataSourceModalOpen(false)}
+        />
+
+        {/* Footer Note */}
+        <div className="p-6 rounded-2xl bg-white border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-400">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
+            <span className="font-medium text-slate-600">
+              Sample data for demonstration purposes
+            </span>
           </div>
-
-          {/* High-Value Opportunities Table (2 Spans) */}
-          <div className="lg:col-span-2 space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-slate-200">
-              <div className="flex items-center gap-2">
-                <h2 className="text-lg font-black text-slate-900 tracking-tight">
-                  Recent Auction Opportunities
-                </h2>
-                <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-full">
-                  {recentLots.length}
-                </span>
-              </div>
-
-              {/* Filter by Dealer */}
-              <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold text-slate-400">Filter Dealer:</span>
-                <select
-                  value={filterDealer}
-                  onChange={(e) => setFilterDealer(e.target.value)}
-                  className="px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-bold text-slate-800 outline-none cursor-pointer"
-                >
-                  <option value="All">All Dealerships</option>
-                  {DEALERS.map(d => (
-                    <option key={d.id} value={d.name}>{d.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            {/* Opportunities Table */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full text-xs text-left">
-                  <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
-                    <tr>
-                      <th className="px-5 py-3.5">Vehicle</th>
-                      <th className="px-5 py-3.5">Matched Dealer</th>
-                      <th className="px-5 py-3.5">FOB / Landed</th>
-                      <th className="px-5 py-3.5">Max Bid</th>
-                      <th className="px-5 py-3.5">AI Score</th>
-                      <th className="px-5 py-3.5 text-right">Review</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 font-medium">
-                    {recentLots.map((v) => (
-                      <tr key={v.id} className="hover:bg-slate-50/60 transition-colors">
-                        <td className="px-5 py-4">
-                          <div className="flex items-center gap-3">
-                            <img 
-                              src={v.image} 
-                              alt={v.model} 
-                              className="w-11 h-9 object-cover rounded-lg shrink-0 border border-slate-200" 
-                            />
-                            <div>
-                              <div className="font-black text-slate-900">{v.year} {v.make} {v.model}</div>
-                              <div className="text-[11px] text-slate-400">{v.auctionHouse} • Lot #{v.lotNumber}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-5 py-4 font-bold text-slate-800">
-                          {v.dealer}
-                        </td>
-                        <td className="px-5 py-4">
-                          <div className="font-mono text-slate-700">¥{(v.fobJpy).toLocaleString()}</div>
-                          <div className="text-[11px] font-bold text-slate-900">NZ${(v.landedNzd).toLocaleString()} Landed</div>
-                        </td>
-                        <td className="px-5 py-4 font-black text-[#B30D12]">
-                          NZ${(v.maxBidNzd).toLocaleString()}
-                        </td>
-                        <td className="px-5 py-4">
-                          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold ${
-                            v.status === 'Priority' 
-                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
-                              : 'bg-amber-50 text-amber-700 border border-amber-200'
-                          }`}>
-                            <Sparkles size={11} /> {v.score}
-                          </span>
-                        </td>
-                        <td className="px-5 py-4 text-right">
-                          <Link 
-                            href={`/admin/vehicles/${v.id}`} 
-                            className="px-3 py-1.5 bg-[#1B2A4A] hover:bg-[#0B1322] text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"
-                          >
-                            Inspect <ArrowRight size={12} />
-                          </Link>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between pt-2">
-              <span className="text-xs text-slate-500 font-medium">Displaying recent active opportunity lots</span>
-              <Link 
-                href="/admin/vehicles"
-                className="text-xs font-bold text-[#B30D12] hover:text-[#940B0F] flex items-center gap-1"
-              >
-                View Complete Auction Database <ArrowRight size={14} />
-              </Link>
-            </div>
-          </div>
-
+          <span className="text-[11px] text-slate-400">
+            AutoHeiwa Intelligence Engine · Developed for Heiwa Auto Co., Ltd. & Autohub NZ Sourcing Board
+          </span>
         </div>
 
       </div>

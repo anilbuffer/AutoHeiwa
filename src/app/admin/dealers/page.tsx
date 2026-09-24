@@ -17,8 +17,10 @@ import {
   ExternalLink 
 } from "lucide-react";
 import { DEALERS } from "@/lib/data";
+import { useSyncStore } from "@/lib/syncStore";
 
 export default function AdminDealers() {
+  const { state: syncState } = useSyncStore();
   const [dealersList, setDealersList] = useState(DEALERS);
   const [inviteModalOpen, setInviteModalOpen] = useState(false);
   const [newDealerName, setNewDealerName] = useState("");
@@ -167,7 +169,7 @@ export default function AdminDealers() {
                 <div>
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Target Margin</span>
                   <span className="text-xs font-black text-slate-900 block">
-                    {dealer.preferences.targetMargin}
+                    {dealer.id === 1 ? `NZ$${syncState.dealerTargetMargin.toLocaleString()}+` : dealer.preferences.targetMargin}
                   </span>
                 </div>
 

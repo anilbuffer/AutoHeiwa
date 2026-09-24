@@ -14,7 +14,6 @@ import {
   Menu, 
   X,
   ChevronRight, 
-  ArrowRight,
   TrendingUp,
   Sliders,
   Database,
@@ -22,18 +21,22 @@ import {
   ExternalLink,
   Shield,
   Layers,
-  Building2,
-  CheckCircle2
+  CheckCircle2,
+  Sparkles
 } from 'lucide-react';
 import { GLOBAL_SETTINGS } from '@/lib/data';
+import RoleSwitcher from './RoleSwitcher';
+import { useSyncStore } from '@/lib/syncStore';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
+  
+  const { state: syncState } = useSyncStore();
 
   const getBreadcrumbs = () => {
-    if (pathname === '/admin') return [{ label: 'Platform Overview', href: '/admin' }];
+    if (pathname === '/admin') return [{ label: 'Demand Intelligence', href: '/admin' }];
     if (pathname === '/admin/vehicles') return [{ label: 'Auction Inventory', href: '/admin/vehicles' }];
     if (pathname.startsWith('/admin/vehicles/')) return [
       { label: 'Auction Inventory', href: '/admin/vehicles' },
@@ -45,16 +48,14 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       { label: 'Dealer Profile & Criteria', href: pathname }
     ];
     if (pathname === '/admin/settings') return [{ label: 'Global FX & Calculation Engine', href: '/admin/settings' }];
-    if (pathname === '/admin/help') return [{ label: 'Broker SOP & Documentation', href: '/admin/help' }];
-    return [{ label: 'Platform Overview', href: '/admin' }];
+    return [{ label: 'Demand Intelligence', href: '/admin' }];
   };
 
   const navItems = [
-    { label: 'Overview', href: '/admin', icon: LayoutDashboard, badge: null },
+    { label: 'Demand Intelligence', href: '/admin', icon: Sparkles, badge: 'Live AI' },
     { label: 'Auction Lots', href: '/admin/vehicles', icon: Car, badge: '38 Lots' },
     { label: 'Dealers CRM', href: '/admin/dealers', icon: Users, badge: '3 Active' },
     { label: 'Calculation Engine', href: '/admin/settings', icon: Settings, badge: null },
-    { label: 'Broker Docs', href: '/admin/help', icon: HelpCircle, badge: null },
   ];
 
   const handleRefreshFeeds = () => {
@@ -100,27 +101,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </button>
           </div>
 
-          {/* Quick Portal Switcher Banner */}
-          <div className="p-3 mx-3 mt-3 bg-[#111C30] rounded-xl border border-[#1B2A4A]">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-1.5 px-1">
-              <span>ADMIN PLATFORM</span>
-              <span className="inline-flex items-center gap-1 text-blue-400 font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span> Root Access
-              </span>
-            </div>
-            <Link 
-              href="/" 
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#0B1322] hover:bg-[#1B2A4A] text-slate-200 text-xs font-semibold border border-[#1B2A4A] transition-colors group"
-            >
-              <span className="flex items-center gap-1.5">
-                <Building2 size={14} className="text-emerald-400" /> Switch to Dealer Portal
-              </span>
-              <ArrowRight size={13} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
-
           {/* Live Scraper Engine Status */}
-          <div className="px-4 py-2 mx-3 mt-2 flex items-center justify-between bg-[#0E182A] rounded-lg border border-[#1B2A4A]/60 text-[11px]">
+          <div className="px-4 py-2 mx-3 mt-3 flex items-center justify-between bg-[#0E182A] rounded-lg border border-[#1B2A4A]/60 text-[11px]">
             <div className="flex items-center gap-1.5 text-slate-300 font-medium">
               <Database size={12} className="text-blue-400" />
               <span>Auction Feeds:</span>
@@ -167,27 +149,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               );
             })}
           </nav>
-
-          {/* System Telemetry & Pipeline */}
-          <div className="mx-3 mt-6 p-3 bg-[#0E182A] rounded-xl border border-[#1B2A4A]/60 text-xs">
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-2">
-              Platform Metrics
-            </div>
-            <div className="space-y-1.5 text-[11px]">
-              <div className="flex justify-between">
-                <span className="text-slate-400">Total Pipeline:</span>
-                <span className="font-bold text-slate-200">NZ$1.42M</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">Est. Dealer Margin:</span>
-                <span className="font-bold text-emerald-400">NZ$284,500</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-400">FX Base Rate:</span>
-                <span className="font-bold text-slate-200">91.24 JPY</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* Super Admin Footer */}
@@ -235,9 +196,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 ))}
               </div>
               <div className="text-lg font-black text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
-                Command Center 
-                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
-                  <Shield size={11} className="text-[#B30D12]" /> Brokerage Super Admin
+                {pathname === '/admin' ? 'Demand Intelligence' : 'Command Center'}
+                <span className="hidden sm:inline-flex items-center gap-1 text-[11px] font-bold text-slate-800 bg-slate-100 px-2.5 py-0.5 rounded-full border border-slate-200">
+                  <Shield size={11} className="text-[#B30D12]" /> 
+                  {pathname === '/admin' ? 'Autohub & Heiwa Sourcing' : 'Brokerage Super Admin'}
                 </span>
               </div>
             </div>
@@ -246,26 +208,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* Header Right Actions */}
           <div className="flex items-center gap-3">
             {/* Quick Search */}
-            <div className="relative hidden md:flex items-center">
+            <div className="relative hidden xl:flex items-center">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
               <input 
                 type="text" 
-                placeholder="Search dealers, VINs, lot numbers, makes..." 
-                className="pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#1B2A4A] focus:ring-2 focus:ring-[#1B2A4A]/20 outline-none transition-all w-[300px] text-xs placeholder:text-slate-400 font-medium"
+                placeholder="Search models, dealers, VINs..." 
+                className="pl-9 pr-12 py-2 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-[#1B2A4A] focus:ring-2 focus:ring-[#1B2A4A]/20 outline-none transition-all w-[240px] text-xs placeholder:text-slate-400 font-medium"
               />
               <span className="absolute right-2.5 top-1/2 -translate-y-1/2 bg-white border border-slate-200 text-slate-400 rounded px-1.5 py-0.5 text-[10px] font-bold shadow-2xs">
                 ⌘K
               </span>
             </div>
 
-            {/* Switch to Dealer Quick Pill */}
-            <Link 
-              href="/"
-              className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold border border-slate-200 transition-colors"
-            >
-              <Building2 size={14} className="text-emerald-600" />
-              <span>Dealer View</span>
-            </Link>
+            {/* Role Switcher: View as: Dealer / Autohub Admin */}
+            <RoleSwitcher />
 
             {/* Notification Bell */}
             <button className="relative p-2.5 text-slate-600 hover:text-slate-900 transition-colors border border-slate-200 rounded-xl hover:bg-slate-50 bg-white">

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import { 
   Building2, 
@@ -15,25 +15,46 @@ import {
   Phone, 
   MapPin, 
   Sparkles,
-  Zap
+  Zap,
+  Car
 } from "lucide-react";
 import { DEALERS } from "@/lib/data";
+import { useSyncStore } from "@/lib/syncStore";
 
 export default function ProfilePage() {
   const dealer = DEALERS[0]; // Auckland Auto Group
+  const { state: syncState, updateDealerWishlist } = useSyncStore();
 
-  const [selectedMakes, setSelectedMakes] = useState<string[]>(dealer.preferences.makes);
+  const [selectedMakes, setSelectedMakes] = useState<string[]>(syncState.dealerMakes);
+  const [selectedModels, setSelectedModels] = useState<string[]>(syncState.dealerModels);
   const [selectedFuels, setSelectedFuels] = useState<string[]>(dealer.preferences.fuelTypes);
-  const [maxKm, setMaxKm] = useState<number>(dealer.preferences.maxKm);
-  const [targetMargin, setTargetMargin] = useState<number>(3500);
+  const [maxKm, setMaxKm] = useState<number>(syncState.dealerMaxKm);
+  const [targetMargin, setTargetMargin] = useState<number>(syncState.dealerTargetMargin);
+  const [targetBudget, setTargetBudget] = useState<number>(syncState.dealerTargetBudget);
   const [autoAlerts, setAutoAlerts] = useState<boolean>(true);
   const [savedSuccess, setSavedSuccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    setSelectedMakes(syncState.dealerMakes);
+    setSelectedModels(syncState.dealerModels);
+    setMaxKm(syncState.dealerMaxKm);
+    setTargetMargin(syncState.dealerTargetMargin);
+    setTargetBudget(syncState.dealerTargetBudget);
+  }, [syncState]);
 
   const toggleMake = (make: string) => {
     if (selectedMakes.includes(make)) {
       setSelectedMakes(selectedMakes.filter(m => m !== make));
     } else {
       setSelectedMakes([...selectedMakes, make]);
+    }
+  };
+
+  const toggleModel = (model: string) => {
+    if (selectedModels.includes(model)) {
+      setSelectedModels(selectedModels.filter(m => m !== model));
+    } else {
+      setSelectedModels([...selectedModels, model]);
     }
   };
 
@@ -46,11 +67,26 @@ export default function ProfilePage() {
   };
 
   const handleSave = () => {
+    updateDealerWishlist(selectedModels, selectedMakes, targetBudget, targetMargin);
     setSavedSuccess(true);
-    setTimeout(() => setSavedSuccess(false), 2500);
+    setTimeout(() => setSavedSuccess(false), 3000);
   };
 
-  const availableMakes = ["Toyota", "Honda", "Mazda", "Nissan", "Lexus", "Subaru", "Mitsubishi"];
+  const availableMakes = ["Toyota", "Honda", "Mazda", "Nissan", "Lexus", "Subaru", "Suzuki"];
+  const availableModels = [
+    "Aqua", 
+    "C-HR", 
+    "Prius", 
+    "Vezel", 
+    "Fit", 
+    "CX-5", 
+    "Note", 
+    "Axela", 
+    "NX300h", 
+    "Swift",
+    "Corolla Fielder",
+    "RAV4"
+  ];
   const availableFuels = ["Hybrid", "Petrol", "Electric (EV)", "Plug-in Hybrid (PHEV)"];
 
   return (
@@ -82,16 +118,18 @@ export default function ProfilePage() {
 
           <button
             onClick={handleSave}
-            className="px-5 py-2.5 bg-[#B30D12] hover:bg-[#940B0F] text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:shadow flex items-center gap-1.5 self-start md:self-auto"
+            className="px-5 py-2.5 bg-[#B30D12] hover:bg-[#940B0F] text-white text-xs font-bold rounded-xl transition-all shadow-sm hover:shadow flex items-center gap-1.5 self-start md:self-auto cursor-pointer"
           >
-            <Save size={14} /> Save Preferences
+            <Save size={14} /> Save Preferences & Sync
           </button>
         </div>
 
         {savedSuccess && (
           <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-xs font-bold text-emerald-800 flex items-center gap-2 animate-in fade-in duration-200">
-            <CheckCircle2 size={16} className="text-emerald-600" />
-            Buying preferences updated! AI auction filters will now prioritize your updated margin rules.
+            <CheckCircle2 size={16} className="text-emerald-600 shrink-0" />
+            <span>
+              Buying preferences updated! Successfully synchronized with Heiwa Auto Japan procurement engine and Autohub demand intelligence.
+            </span>
           </div>
         )}
 
@@ -99,25 +137,57 @@ export default function ProfilePage() {
         <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
           <div className="p-6 border-b border-slate-100 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#1B2A4A]/10 text-[#1B2A4A] flex items-center justify-center font-bold">
-                <Settings2 size={18} />
+              <div className="w-8 h-8 rounded-lg bg-[#B30D12]/10 text-[#B30D12] flex items-center justify-center font-bold">
+                <SlidersHorizontal size={18} />
               </div>
               <div>
-                <h2 className="text-base font-black text-slate-900">Buying Profile & Arbitrage Filters</h2>
-                <p className="text-xs text-slate-400 font-medium">AutoHeiwa matches live Japanese auction lots against these exact yard rules.</p>
+                <h2 className="text-base font-black text-slate-900">Active Sourcing & Buying Criteria</h2>
+                <p className="text-xs text-slate-400 font-medium">Controls which upcoming Japanese auction lots match your yard inventory.</p>
               </div>
+            </div>
+
+            <div className="hidden sm:flex items-center gap-2 text-xs font-bold text-slate-500 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200">
+              <Sparkles size={13} className="text-[#B30D12]" />
+              <span>{selectedModels.length} Active Target Models</span>
             </div>
           </div>
 
-          <div className="p-6 sm:p-8 space-y-8">
+          <div className="p-6 space-y-6">
             
-            {/* Preferred Makes */}
+            {/* Target Models Selector */}
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                  Target Vehicle Models (Wish List)
+                </label>
+                <span className="text-[11px] text-slate-400 font-medium">Click to add/remove models for Heiwa sourcing alerts</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {availableModels.map((model) => {
+                  const isSelected = selectedModels.includes(model);
+                  return (
+                    <button
+                      key={model}
+                      onClick={() => toggleModel(model)}
+                      className={`px-3.5 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
+                        isSelected 
+                          ? 'bg-[#B30D12] text-white border-[#B30D12] shadow-xs' 
+                          : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
+                      }`}
+                    >
+                      {model} {isSelected && '✓'}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Target Manufacturers */}
             <div>
               <div className="flex items-center justify-between mb-3">
                 <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
                   Target Makes
                 </label>
-                <span className="text-[11px] text-slate-400">Click to toggle</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {availableMakes.map((make) => {
@@ -126,7 +196,7 @@ export default function ProfilePage() {
                     <button
                       key={make}
                       onClick={() => toggleMake(make)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                         isSelected 
                           ? 'bg-[#1B2A4A] text-white border-[#1B2A4A] shadow-xs' 
                           : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
@@ -153,7 +223,7 @@ export default function ProfilePage() {
                     <button
                       key={fuel}
                       onClick={() => toggleFuel(fuel)}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border ${
+                      className={`px-4 py-2 rounded-xl text-xs font-bold transition-all border cursor-pointer ${
                         isSelected 
                           ? 'bg-emerald-700 text-white border-emerald-700 shadow-xs' 
                           : 'bg-slate-50 text-slate-600 border-slate-200 hover:bg-slate-100'
@@ -229,14 +299,14 @@ export default function ProfilePage() {
                     <Zap size={20} />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-slate-900">High-Priority Opportunity Alerts</div>
-                    <div className="text-[11px] text-slate-500">Notify immediately when USS Tokyo lots hit Score 90+ matching your Auckland yard rules.</div>
+                    <div className="text-xs font-bold text-slate-900">Heiwa Autonomous Match Notifications</div>
+                    <div className="text-[11px] text-slate-500">Receive priority dispatch alerts when Japanese auctions list vehicles matching your Auckland yard criteria.</div>
                   </div>
                 </div>
 
                 <button 
                   onClick={() => setAutoAlerts(!autoAlerts)}
-                  className={`w-12 h-6 rounded-full transition-colors relative ${autoAlerts ? 'bg-emerald-600' : 'bg-slate-300'}`}
+                  className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${autoAlerts ? 'bg-emerald-600' : 'bg-slate-300'}`}
                 >
                   <span className={`block w-4 h-4 rounded-full bg-white shadow-xs transform transition-transform ${autoAlerts ? 'translate-x-7' : 'translate-x-1'}`} />
                 </button>

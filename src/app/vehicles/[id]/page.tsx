@@ -22,10 +22,13 @@ import {
   X
 } from "lucide-react";
 import { VEHICLES, GLOBAL_SETTINGS } from "@/lib/data";
+import { useSyncStore } from "@/lib/syncStore";
 
 export default function VehicleDetail({ params }: { params: { id: string } }) {
   const vehicleId = parseInt(params?.id) || 1;
   const vehicle = VEHICLES.find(v => v.id === vehicleId) || VEHICLES[0];
+
+  const { state: syncState, toggleShortlistVehicle } = useSyncStore();
 
   // Interactive Bid Simulator State
   const [fobJpy, setFobJpy] = useState(vehicle.fobJpy);
@@ -34,11 +37,11 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
   const [activePhoto, setActivePhoto] = useState(vehicle.image);
   const [pdfToast, setPdfToast] = useState(false);
 
-  // Dynamic calculations based on live inputs
-  const fxRate = GLOBAL_SETTINGS.fxRateJpyNzd;
+  // Dynamic calculations based on live inputs and Admin synced FX
+  const fxRate = syncState.fxRateJpyNzd;
   const fobNzd = Math.round(fobJpy / fxRate);
-  const freightNzd = GLOBAL_SETTINGS.freightPerUnitNzd;
-  const complianceNzd = GLOBAL_SETTINGS.compliancePerUnitNzd;
+  const freightNzd = syncState.freightPerUnitNzd;
+  const complianceNzd = syncState.compliancePerUnitNzd;
   const landedBeforeGst = fobNzd + freightNzd + complianceNzd;
   const gst = Math.round(landedBeforeGst * GLOBAL_SETTINGS.gstRate);
   const totalLandedCost = landedBeforeGst + gst;
@@ -49,6 +52,11 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
   const handleDownloadSheet = () => {
     setPdfToast(true);
     setTimeout(() => setPdfToast(false), 3000);
+  };
+
+  const handlePlaceBid = () => {
+    toggleShortlistVehicle(vehicle.id);
+    setBidPlaced(true);
   };
 
   return (

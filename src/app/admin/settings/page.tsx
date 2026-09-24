@@ -17,9 +17,12 @@ import {
   FileCheck2
 } from "lucide-react";
 import { GLOBAL_SETTINGS } from "@/lib/data";
+import { useSyncStore } from "@/lib/syncStore";
 
 export default function AdminSettings() {
-  const [fxRate, setFxRate] = useState(GLOBAL_SETTINGS.fxRateJpyNzd);
+  const { state: syncState, updateGlobalFx } = useSyncStore();
+  
+  const [fxRate, setFxRate] = useState(syncState.fxRateJpyNzd);
   const [freight, setFreight] = useState(GLOBAL_SETTINGS.freightPerUnitNzd);
   const [compliance, setCompliance] = useState(GLOBAL_SETTINGS.compliancePerUnitNzd);
   const [defaultMargin, setDefaultMargin] = useState(GLOBAL_SETTINGS.defaultTargetMarginNzd);
@@ -27,6 +30,7 @@ export default function AdminSettings() {
   const [isSyncing, setIsSyncing] = useState(false);
 
   const handleSave = () => {
+    updateGlobalFx(fxRate);
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 2500);
   };
@@ -34,7 +38,9 @@ export default function AdminSettings() {
   const handleSyncFx = () => {
     setIsSyncing(true);
     setTimeout(() => {
-      setFxRate(91.45);
+      const liveRate = 91.85;
+      setFxRate(liveRate);
+      updateGlobalFx(liveRate);
       setIsSyncing(false);
     }, 600);
   };
