@@ -127,7 +127,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-emerald-700 tracking-tight">06</span>
+              <span className="text-4xl font-black text-emerald-700 tracking-tight">06</span>
               <span className="text-xs font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded">Spread &gt; NZ$3.5k</span>
             </div>
             <p className="text-xs text-slate-600 mt-2 font-medium">Top 15% estimated dealer margin</p>
@@ -142,7 +142,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 tracking-tight">32</span>
+              <span className="text-4xl font-black text-slate-900 tracking-tight">32</span>
               <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">+5 today</span>
             </div>
             <p className="text-xs text-slate-500 mt-2 font-medium">Matching Auckland target models</p>
@@ -157,7 +157,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 tracking-tight">NZ$18,450</span>
+              <span className="text-4xl font-black text-slate-900 tracking-tight">NZ$18,450</span>
             </div>
             <p className="text-xs text-slate-500 mt-2 font-medium">~NZ$4,800 below NZ yard retail avg</p>
           </div>
@@ -171,7 +171,7 @@ export default function Dashboard() {
               </div>
             </div>
             <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 tracking-tight">28 days</span>
+              <span className="text-4xl font-black text-slate-900 tracking-tight">28 days</span>
               <span className="text-xs font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">Fast-moving</span>
             </div>
             <p className="text-xs text-slate-500 mt-2 font-medium">Auckland hybrid listing turnaround</p>
