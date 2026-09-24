@@ -1,61 +1,66 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Car, User, HelpCircle, Bell, Search, Menu, ChevronDown, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Car, Users, Settings, HelpCircle, Bell, Search, Menu, ChevronDown, ChevronRight } from 'lucide-react';
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   const getBreadcrumb = () => {
-    if (pathname === '/') return 'Dashboard';
-    if (pathname.includes('/vehicles')) return 'Vehicles';
-    if (pathname.includes('/profile')) return 'My Profile';
+    if (pathname === '/admin') return 'Dashboard';
+    if (pathname.includes('/admin/vehicles')) return 'Vehicles';
+    if (pathname.includes('/admin/dealers')) return 'Dealers';
+    if (pathname.includes('/admin/settings')) return 'Settings';
     return 'Dashboard';
   };
 
   return (
     <div className="flex h-screen bg-gray-50/50 dark:bg-gray-900 font-sans">
       {/* Sidebar */}
-      <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden md:flex md:flex-col justify-between">
+      <aside className="w-64 bg-slate-900 dark:bg-slate-950 border-r border-slate-800 hidden md:flex md:flex-col justify-between text-slate-300">
         <div>
-          <div className="h-16 flex items-center px-6 border-b border-gray-200 dark:border-gray-700">
+          <div className="h-16 flex items-center px-6 border-b border-slate-800">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center shadow-sm">
+              <div className="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center shadow-sm">
                 <span className="text-white font-bold text-xl leading-none">A</span>
               </div>
               <div>
-                <span className="block text-sm font-bold text-gray-900 dark:text-white leading-tight">AUTOHEIWA</span>
-                <span className="block text-xs font-semibold text-gray-500 tracking-wider">DEALER PORTAL</span>
+                <span className="block text-sm font-bold text-white leading-tight">AUTOHEIWA</span>
+                <span className="block text-xs font-semibold text-slate-400 tracking-wider">ADMIN PORTAL</span>
               </div>
             </div>
           </div>
           
           <nav className="p-4 space-y-1">
-            <Link href="/" className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${pathname === '/' ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'}`}>
+            <Link href="/admin" className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${pathname === '/admin' ? 'bg-blue-600/20 text-blue-400' : 'hover:bg-slate-800 hover:text-white'}`}>
               <LayoutDashboard size={20} />
               Dashboard
             </Link>
-            <Link href="/vehicles" className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${pathname.includes('/vehicles') ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'}`}>
+            <Link href="/admin/vehicles" className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${pathname.includes('/admin/vehicles') ? 'bg-blue-600/20 text-blue-400' : 'hover:bg-slate-800 hover:text-white'}`}>
               <Car size={20} />
               Vehicles
             </Link>
-            <Link href="/profile" className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${pathname.includes('/profile') ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300' : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white'}`}>
-              <User size={20} />
-              My Profile
+            <Link href="/admin/dealers" className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${pathname.includes('/admin/dealers') ? 'bg-blue-600/20 text-blue-400' : 'hover:bg-slate-800 hover:text-white'}`}>
+              <Users size={20} />
+              Dealers
+            </Link>
+            <Link href="/admin/settings" className={`flex items-center gap-3 px-3 py-2 rounded-md font-medium transition-colors ${pathname.includes('/admin/settings') ? 'bg-blue-600/20 text-blue-400' : 'hover:bg-slate-800 hover:text-white'}`}>
+              <Settings size={20} />
+              Settings
             </Link>
           </nav>
         </div>
 
-        <div className="p-4 border-t border-gray-200 dark:border-gray-700 space-y-1">
-          <Link href="/help" className="flex items-center gap-3 px-3 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700/50 hover:text-gray-900 dark:hover:text-white rounded-md font-medium transition-colors">
+        <div className="p-4 border-t border-slate-800 space-y-1">
+          <Link href="/admin/help" className="flex items-center gap-3 px-3 py-2 hover:bg-slate-800 hover:text-white rounded-md font-medium transition-colors">
             <HelpCircle size={20} />
             Help
           </Link>
-          <div className="flex items-center gap-3 px-3 py-2 mt-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            <div className="w-8 h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-              <User size={16} />
+          <div className="flex items-center gap-3 px-3 py-2 mt-2 text-sm font-medium text-white">
+            <div className="w-8 h-8 rounded-full bg-slate-700 flex items-center justify-center">
+              <Users size={16} />
             </div>
-            Dealer
+            Admin
           </div>
         </div>
       </aside>
@@ -69,7 +74,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               <Menu size={24} />
             </button>
             <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2 font-medium">
-              Dealer Portal <ChevronRight size={16} /> <span className="text-gray-900 dark:text-white">{getBreadcrumb()}</span>
+              Admin Portal <ChevronRight size={16} /> <span className="text-gray-900 dark:text-white">{getBreadcrumb()}</span>
             </div>
           </div>
           
@@ -88,7 +93,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </button>
             <div className="flex items-center gap-2 pl-4 border-l border-gray-200 dark:border-gray-700 cursor-pointer">
               <div className="text-sm font-medium text-gray-700 dark:text-gray-200 hidden sm:block">
-                Auckland Auto Group
+                Admin
               </div>
               <ChevronDown size={16} className="text-gray-500" />
             </div>
