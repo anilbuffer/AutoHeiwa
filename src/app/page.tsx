@@ -118,22 +118,7 @@ export default function Dashboard() {
 
         {/* 4 Premium KPI Metric Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {/* Card 1 */}
-          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Qualified Lots</span>
-              <div className="w-8 h-8 rounded-lg bg-slate-100 text-[#1B2A4A] flex items-center justify-center font-bold text-xs">
-                <Car size={16} />
-              </div>
-            </div>
-            <div className="mt-3 flex items-baseline gap-2">
-              <span className="text-3xl font-black text-slate-900 tracking-tight">32</span>
-              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">+5 today</span>
-            </div>
-            <p className="text-xs text-slate-500 mt-2 font-medium">Matching Auckland target models</p>
-          </div>
-
-          {/* Card 2 */}
+          {/* Card 1: Priority Buys */}
           <div className="bg-gradient-to-br from-white to-emerald-50/30 p-5 sm:p-6 rounded-2xl border border-emerald-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
             <div className="flex items-center justify-between">
               <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Priority Buys</span>
@@ -146,6 +131,21 @@ export default function Dashboard() {
               <span className="text-xs font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded">Spread &gt; NZ$3.5k</span>
             </div>
             <p className="text-xs text-slate-600 mt-2 font-medium">Top 15% estimated dealer margin</p>
+          </div>
+
+          {/* Card 2: Qualified Lots */}
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Qualified Lots</span>
+              <div className="w-8 h-8 rounded-lg bg-slate-100 text-[#1B2A4A] flex items-center justify-center font-bold text-xs">
+                <Car size={16} />
+              </div>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl font-black text-slate-900 tracking-tight">32</span>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">+5 today</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2 font-medium">Matching Auckland target models</p>
           </div>
 
           {/* Card 3 */}
