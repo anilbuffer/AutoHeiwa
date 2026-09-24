@@ -4,62 +4,62 @@ import { Settings2, Building2 } from "lucide-react";
 export default function MyProfile() {
   return (
     <AppLayout>
-      <div className="max-w-3xl mx-auto space-y-6">
+      <div className="max-w-[1000px] mx-auto space-y-8">
         
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">My Profile</h1>
-          <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400 font-medium">
-            <Building2 size={18} /> Auckland Auto Group
+          <h1 className="text-[28px] font-extrabold text-[#111827] mb-1">My Profile</h1>
+          <div className="flex items-center gap-2 text-gray-500 font-medium text-sm">
+            <Building2 size={16} /> Auckland Auto Group
           </div>
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-          <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <Settings2 size={20} className="text-blue-600 dark:text-blue-400" />
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] overflow-hidden">
+          <div className="p-7 border-b border-gray-100 flex items-center justify-between bg-white">
+            <h2 className="text-[18px] font-extrabold text-[#111827] flex items-center gap-2">
+              <Settings2 size={20} className="text-blue-600" />
               Buying Preferences
             </h2>
-            <button className="text-sm font-medium text-blue-600 hover:text-blue-700">Edit</button>
+            <button className="text-[13px] font-bold text-blue-600 hover:text-blue-700 transition-colors">Edit Preferences</button>
           </div>
           
-          <div className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-8 gap-x-12">
+          <div className="p-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-y-10 gap-x-12">
               
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Makes</h3>
+                <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-3">Makes</h3>
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-medium">Toyota</span>
-                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-medium">Honda</span>
-                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-medium">Mazda</span>
+                  <span className="px-4 py-1.5 bg-[#f8fafc] border border-gray-100 text-[#111827] rounded-lg text-[13px] font-bold shadow-sm">Toyota</span>
+                  <span className="px-4 py-1.5 bg-[#f8fafc] border border-gray-100 text-[#111827] rounded-lg text-[13px] font-bold shadow-sm">Honda</span>
+                  <span className="px-4 py-1.5 bg-[#f8fafc] border border-gray-100 text-[#111827] rounded-lg text-[13px] font-bold shadow-sm">Mazda</span>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Year</h3>
-                <p className="text-base font-medium text-gray-900 dark:text-white">2018 – 2022</p>
+                <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-3">Year</h3>
+                <p className="text-lg font-extrabold text-[#111827]">2018 – 2022</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Maximum KM</h3>
-                <p className="text-base font-medium text-gray-900 dark:text-white">80,000</p>
+                <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-3">Maximum KM</h3>
+                <p className="text-lg font-extrabold text-[#111827]">80,000</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Fuel</h3>
+                <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-3">Fuel</h3>
                 <div className="flex flex-wrap gap-2">
-                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-medium">Hybrid</span>
-                  <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-md text-sm font-medium">Petrol</span>
+                  <span className="px-4 py-1.5 bg-[#f8fafc] border border-gray-100 text-[#111827] rounded-lg text-[13px] font-bold shadow-sm">Hybrid</span>
+                  <span className="px-4 py-1.5 bg-[#f8fafc] border border-gray-100 text-[#111827] rounded-lg text-[13px] font-bold shadow-sm">Petrol</span>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Target Retail</h3>
-                <p className="text-base font-medium text-gray-900 dark:text-white">NZ$18,000 – NZ$25,000</p>
+                <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-3">Target Retail</h3>
+                <p className="text-lg font-extrabold text-[#111827]">NZ$18,000 – NZ$25,000</p>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-2">Target Margin</h3>
-                <p className="text-base font-medium text-gray-900 dark:text-white">NZ$3,000+</p>
+                <h3 className="text-[12px] font-bold text-gray-400 uppercase tracking-wider mb-3">Target Margin</h3>
+                <p className="text-lg font-extrabold text-[#111827]">NZ$3,000+</p>
               </div>
 
             </div>
