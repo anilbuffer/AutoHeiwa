@@ -7,19 +7,14 @@ import {
   LayoutDashboard, 
   Car, 
   User, 
-  HelpCircle, 
   Bell, 
   Search, 
   Menu, 
   X, 
   ChevronRight, 
-  ArrowRight,
   TrendingUp,
-  Clock,
   Building2,
-  SlidersHorizontal,
-  ExternalLink,
-  ShieldCheck,
+  LogOut,
   CheckCircle2,
   Sparkles
 } from 'lucide-react';
@@ -90,27 +85,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             </button>
           </div>
 
-          {/* Quick Portal Switcher Banner */}
-          <div className="p-3 mx-3 mt-3 bg-[#111C30] rounded-xl border border-[#1B2A4A]">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-1.5 px-1">
-              <span>PORTAL MODE</span>
-              <span className="inline-flex items-center gap-1 text-emerald-400 font-bold">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Dealer Active
-              </span>
-            </div>
-            <Link 
-              href="/admin" 
-              className="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-[#0B1322] hover:bg-[#1B2A4A] text-slate-200 text-xs font-semibold border border-[#1B2A4A] transition-colors group"
-            >
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck size={14} className="text-blue-400" /> Switch to Admin Portal
-              </span>
-              <ArrowRight size={13} className="text-slate-400 group-hover:translate-x-0.5 transition-transform" />
-            </Link>
-          </div>
-
           {/* Live JPY/NZD Rate Pill */}
-          <div className="px-4 py-2 mx-3 mt-2 flex items-center justify-between bg-[#0E182A] rounded-lg border border-[#1B2A4A]/60 text-[11px]">
+          <div className="px-4 py-2 mx-3 mt-3 flex items-center justify-between bg-[#0E182A] rounded-lg border border-[#1B2A4A]/60 text-[11px]">
             <div className="flex items-center gap-1.5 text-slate-300 font-medium">
               <TrendingUp size={12} className="text-emerald-400" />
               <span>¥ / NZ$:</span>
@@ -153,30 +129,6 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               );
             })}
           </nav>
-
-          {/* Tokyo Auction Feeds Status */}
-          <div className="mx-3 mt-6 p-3 bg-[#0E182A] rounded-xl border border-[#1B2A4A]/60 text-xs">
-            <div className="flex items-center justify-between text-[11px] font-semibold text-slate-400 mb-2">
-              <span className="flex items-center gap-1.5">
-                <Clock size={12} className="text-slate-400" /> Auction Countdown
-              </span>
-              <span className="text-red-400 font-bold font-mono">02h 45m</span>
-            </div>
-            <div className="space-y-1.5 text-[11px] text-slate-300">
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400">USS Tokyo</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 24,190 lots
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400">USS Yokohama</span>
-                <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span> 18,650 lots
-                </span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* User / Dealership Footer */}
@@ -197,7 +149,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             title="Switch User / Logout"
             className="p-1.5 text-slate-400 hover:text-white hover:bg-[#1B2A4A] rounded-lg transition-colors"
           >
-            <ExternalLink size={14} />
+            <LogOut size={14} />
           </Link>
         </div>
       </aside>

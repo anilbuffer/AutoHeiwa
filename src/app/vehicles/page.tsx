@@ -315,7 +315,7 @@ export default function VehiclesPage() {
                         </div>
 
                         <div className="text-[11px] text-slate-500 font-medium mt-2 flex items-center gap-2">
-                          <span>{(vehicle.km).toLocaleString()} km</span>
+                          <span>{(vehicle.km).toLocaleString('en-US')} km</span>
                           <span>•</span>
                           <span>{vehicle.engine}</span>
                           <span>•</span>
@@ -327,13 +327,13 @@ export default function VehiclesPage() {
                           <div>
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Landed Cost</span>
                             <span className="font-black text-slate-900 text-sm mt-0.5 block font-mono">
-                              NZ${dynamicLanded.toLocaleString()}
+                              NZ${dynamicLanded.toLocaleString('en-US')}
                             </span>
                           </div>
                           <div>
                             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. Retail</span>
                             <span className="font-bold text-slate-900 text-sm mt-0.5 block font-mono">
-                              NZ${(vehicle.estRetailNzd).toLocaleString()}
+                              NZ${(vehicle.estRetailNzd).toLocaleString('en-US')}
                             </span>
                           </div>
                         </div>
@@ -344,7 +344,7 @@ export default function VehiclesPage() {
                         <div>
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. Margin Spread</span>
                           <span className="text-base font-black text-emerald-700 block font-mono">
-                            +NZ${Math.max(1500, vehicle.estRetailNzd - dynamicLanded).toLocaleString()}
+                            +NZ${Math.max(1500, vehicle.estRetailNzd - dynamicLanded).toLocaleString('en-US')}
                           </span>
                         </div>
 
@@ -400,20 +400,20 @@ export default function VehiclesPage() {
                         <div className="text-[11px] text-slate-400 font-mono">Lot #{v.lotNumber} • Grade {v.grade}</div>
                       </td>
                       <td className="px-5 py-4">
-                        <div className="text-slate-800 font-semibold">{(v.km).toLocaleString()} km</div>
+                        <div className="text-slate-800 font-semibold">{(v.km).toLocaleString('en-US')} km</div>
                         <div className="text-[11px] text-slate-400">{v.engine}</div>
                       </td>
                       <td className="px-5 py-4 font-mono font-bold text-slate-800">
-                        ¥{(v.fobJpy).toLocaleString()}
+                        ¥{(v.fobJpy).toLocaleString('en-US')}
                       </td>
                       <td className="px-5 py-4 font-bold text-slate-900">
-                        NZ${(v.landedNzd).toLocaleString()}
+                        NZ${(v.landedNzd).toLocaleString('en-US')}
                       </td>
                       <td className="px-5 py-4 font-bold text-slate-900">
-                        NZ${(v.estRetailNzd).toLocaleString()}
+                        NZ${(v.estRetailNzd).toLocaleString('en-US')}
                       </td>
                       <td className="px-5 py-4 font-black text-[#B30D12]">
-                        NZ${(v.maxBidNzd).toLocaleString()}
+                        NZ${(v.maxBidNzd).toLocaleString('en-US')}
                       </td>
                       <td className="px-5 py-4">
                         <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-bold ${

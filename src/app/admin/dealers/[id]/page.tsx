@@ -106,7 +106,7 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
 
             <div>
               <span className="font-bold text-slate-400 uppercase tracking-wider block mb-2">Maximum Mileage</span>
-              <span className="text-sm font-black text-slate-900">{(dealer.preferences.maxKm).toLocaleString()} km</span>
+              <span className="text-sm font-black text-slate-900">{(dealer.preferences.maxKm).toLocaleString('en-US')} km</span>
             </div>
 
             <div>
@@ -152,14 +152,14 @@ export default function AdminDealerProfile({ params }: { params: { id: string } 
                       </span>
                     </div>
                     <p className="text-[11px] text-slate-400 mt-0.5 font-mono">
-                      {v.auctionHouse} • Lot #{v.lotNumber} • {(v.km).toLocaleString()} km
+                      {v.auctionHouse} • Lot #{v.lotNumber} • {(v.km).toLocaleString('en-US')} km
                     </p>
                   </div>
 
                   <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
                     <div>
                       <span className="text-slate-400 text-[10px] block">Landed Cost</span>
-                      <span className="font-bold text-slate-900">NZ${(v.landedNzd).toLocaleString()}</span>
+                      <span className="font-bold text-slate-900">NZ${(v.landedNzd).toLocaleString('en-US')}</span>
                     </div>
                     <Link
                       href={`/admin/vehicles/${v.id}`}

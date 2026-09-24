@@ -169,7 +169,7 @@ export default function AdminDealers() {
                 <div>
                   <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Target Margin</span>
                   <span className="text-xs font-black text-slate-900 block">
-                    {dealer.id === 1 ? `NZ$${syncState.dealerTargetMargin.toLocaleString()}+` : dealer.preferences.targetMargin}
+                    {dealer.id === 1 ? `NZ$${syncState.dealerTargetMargin.toLocaleString('en-US')}+` : dealer.preferences.targetMargin}
                   </span>
                 </div>
 

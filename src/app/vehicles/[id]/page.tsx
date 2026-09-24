@@ -112,7 +112,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               {vehicle.year} {vehicle.make} {vehicle.model} {vehicle.badge}
             </h1>
             <p className="text-slate-500 text-xs font-medium mt-1">
-              VIN: <span className="font-mono text-slate-700 font-semibold">{vehicle.vin}</span> • {(vehicle.km).toLocaleString()} km verified • {vehicle.engine} • {vehicle.color}
+              VIN: <span className="font-mono text-slate-700 font-semibold">{vehicle.vin}</span> • {(vehicle.km).toLocaleString('en-US')} km verified • {vehicle.engine} • {vehicle.color}
             </p>
           </div>
 
@@ -120,10 +120,10 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
             <div className="text-right">
               <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Recommended Max Bid</span>
               <span className="text-2xl font-black text-[#B30D12] block">
-                NZ${maxBidNzd.toLocaleString()}
+                NZ${maxBidNzd.toLocaleString('en-US')}
               </span>
               <span className="text-[11px] text-slate-400 font-mono">
-                ~¥{maxBidJpy.toLocaleString()} FOB limit
+                ~¥{maxBidJpy.toLocaleString('en-US')} FOB limit
               </span>
             </div>
           </div>
@@ -186,7 +186,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
 
               <div className="mt-4">
                 <span className="text-3xl font-black text-slate-900 block">
-                  NZ${totalLandedCost.toLocaleString()}
+                  NZ${totalLandedCost.toLocaleString('en-US')}
                 </span>
                 <span className="text-xs text-slate-500 font-medium mt-1 block">
                   Includes CIF freight, NZ compliance & 15% GST
@@ -196,15 +196,15 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               <div className="mt-6 space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Estimated NZ Retail</span>
-                  <span className="font-bold text-slate-900">NZ${vehicle.estRetailNzd.toLocaleString()}</span>
+                  <span className="font-bold text-slate-900">NZ${vehicle.estRetailNzd.toLocaleString('en-US')}</span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-slate-500">Target Profit Margin</span>
-                  <span className="font-bold text-emerald-600">+NZ${targetMargin.toLocaleString()}</span>
+                  <span className="font-bold text-emerald-600">+NZ${targetMargin.toLocaleString('en-US')}</span>
                 </div>
                 <div className="flex justify-between pt-2 border-t border-slate-200 font-bold">
                   <span className="text-slate-700">Recommended Max Bid</span>
-                  <span className="text-[#B30D12] font-black">NZ${maxBidNzd.toLocaleString()}</span>
+                  <span className="text-[#B30D12] font-black">NZ${maxBidNzd.toLocaleString('en-US')}</span>
                 </div>
               </div>
             </div>
@@ -216,7 +216,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
                     <CheckCircle2 size={16} className="text-emerald-600" /> Auto-Bid Registered!
                   </p>
                   <p className="text-[11px] text-emerald-700">
-                    Broker proxy bid placed up to <strong>NZ${maxBidNzd.toLocaleString()}</strong> on USS Tokyo.
+                    Broker proxy bid placed up to <strong>NZ${maxBidNzd.toLocaleString('en-US')}</strong> on USS Tokyo.
                   </p>
                   <button 
                     onClick={() => setBidPlaced(false)}
@@ -298,7 +298,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               <div>
                 <div className="flex justify-between text-xs font-bold mb-1.5">
                   <span className="text-slate-700">FOB Auction Price (JPY)</span>
-                  <span className="font-mono text-slate-900">¥{fobJpy.toLocaleString()}</span>
+                  <span className="font-mono text-slate-900">¥{fobJpy.toLocaleString('en-US')}</span>
                 </div>
                 <input 
                   type="range" 
@@ -314,7 +314,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               <div>
                 <div className="flex justify-between text-xs font-bold mb-1.5">
                   <span className="text-slate-700">Target Dealer Margin (NZD)</span>
-                  <span className="text-emerald-700 font-bold">NZ${targetMargin.toLocaleString()}</span>
+                  <span className="text-emerald-700 font-bold">NZ${targetMargin.toLocaleString('en-US')}</span>
                 </div>
                 <input 
                   type="range" 
@@ -331,28 +331,28 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
             {/* Step-by-Step Cost Sheet Accordion / Details */}
             <div className="p-4 bg-slate-50/80 rounded-xl border border-slate-100 space-y-2.5 text-xs">
               <div className="flex justify-between text-slate-600">
-                <span>FOB converted to NZD (¥{fobJpy.toLocaleString()})</span>
-                <span className="font-mono font-medium">NZ${fobNzd.toLocaleString()}</span>
+                <span>FOB converted to NZD (¥{fobJpy.toLocaleString('en-US')})</span>
+                <span className="font-mono font-medium">NZ${fobNzd.toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>Ocean Freight (Roll-on / Roll-off)</span>
-                <span className="font-mono font-medium">NZ${freightNzd.toLocaleString()}</span>
+                <span className="font-mono font-medium">NZ${freightNzd.toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>NZ Compliance, Entry & Biosecurity</span>
-                <span className="font-mono font-medium">NZ${complianceNzd.toLocaleString()}</span>
+                <span className="font-mono font-medium">NZ${complianceNzd.toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between text-slate-600 pb-2 border-b border-slate-200">
                 <span>GST (15% on CIF + duty)</span>
-                <span className="font-mono font-medium">NZ${gst.toLocaleString()}</span>
+                <span className="font-mono font-medium">NZ${gst.toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between font-bold text-slate-900 pt-1">
                 <span>Total Landed Cost to Auckland Yard</span>
-                <span className="text-sm">NZ${totalLandedCost.toLocaleString()}</span>
+                <span className="text-sm">NZ${totalLandedCost.toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between font-extrabold text-[#B30D12] pt-1 text-sm">
                 <span>Max Allowable Bid for Target Margin</span>
-                <span>NZ${maxBidNzd.toLocaleString()}</span>
+                <span>NZ${maxBidNzd.toLocaleString('en-US')}</span>
               </div>
             </div>
           </div>
@@ -404,7 +404,7 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
               </div>
               <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
                 <span className="w-3 h-3 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[8px]">★</span>
-                <span>This Heiwa Lot (Landed: NZ${totalLandedCost.toLocaleString()})</span>
+                <span>This Heiwa Lot (Landed: NZ${totalLandedCost.toLocaleString('en-US')})</span>
               </div>
             </div>
 
@@ -447,11 +447,11 @@ export default function VehicleDetail({ params }: { params: { id: string } }) {
                         {comp.source}
                       </td>
                       <td className="px-5 py-3.5 text-slate-700">{comp.year}</td>
-                      <td className="px-5 py-3.5 text-slate-700 font-mono">{(comp.km).toLocaleString()} km</td>
-                      <td className="px-5 py-3.5 font-bold text-slate-900">NZ${(comp.price).toLocaleString()}</td>
+                      <td className="px-5 py-3.5 text-slate-700 font-mono">{(comp.km).toLocaleString('en-US')} km</td>
+                      <td className="px-5 py-3.5 font-bold text-slate-900">NZ${(comp.price).toLocaleString('en-US')}</td>
                       <td className="px-5 py-3.5 text-slate-500">{comp.daysListed} days</td>
                       <td className="px-5 py-3.5 text-right font-extrabold text-emerald-600">
-                        +NZ${spread.toLocaleString()}
+                        +NZ${spread.toLocaleString('en-US')}
                       </td>
                     </tr>
                   );

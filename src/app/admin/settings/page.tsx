@@ -210,15 +210,15 @@ export default function AdminSettings() {
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-slate-700 pt-1">
                 <div>
                   <span className="text-slate-400 text-[10px] block">FOB NZD:</span>
-                  <span className="font-bold text-slate-900">NZ${sampleFobNzd.toLocaleString()}</span>
+                  <span className="font-bold text-slate-900">NZ${sampleFobNzd.toLocaleString('en-US')}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] block">Freight + Comp:</span>
-                  <span className="font-bold text-slate-900">NZ${(freight + compliance).toLocaleString()}</span>
+                  <span className="font-bold text-slate-900">NZ${(freight + compliance).toLocaleString('en-US')}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] block">Landed (incl GST):</span>
-                  <span className="font-black text-[#1B2A4A]">NZ${sampleLandedNzd.toLocaleString()}</span>
+                  <span className="font-black text-[#1B2A4A]">NZ${sampleLandedNzd.toLocaleString('en-US')}</span>
                 </div>
                 <div>
                   <span className="text-slate-400 text-[10px] block">Spread Delta:</span>

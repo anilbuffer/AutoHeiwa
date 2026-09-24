@@ -113,7 +113,7 @@ export default function UpcomingAuctionMatchSection({ onNotifyToast }: UpcomingA
                     </h4>
                   </div>
                   <p className="text-[11px] text-slate-500 font-medium mt-0.5">
-                    {vehicle.badge} · {vehicle.km.toLocaleString()} km
+                    {vehicle.badge} · {vehicle.km.toLocaleString('en-US')} km
                   </p>
 
                   {/* Pricing Dual Currency */}
@@ -121,13 +121,13 @@ export default function UpcomingAuctionMatchSection({ onNotifyToast }: UpcomingA
                     <div>
                       <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">FOB PRICE</span>
                       <span className="font-black text-slate-900 text-sm">
-                        NZ${vehicle.fobPriceNzd.toLocaleString()}
+                        NZ${vehicle.fobPriceNzd.toLocaleString('en-US')}
                       </span>
                     </div>
                     <div className="text-right">
                       <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">YEN (JPY)</span>
                       <span className="font-bold text-slate-700 text-xs">
-                        ¥{vehicle.fobPriceJpy.toLocaleString()}
+                        ¥{vehicle.fobPriceJpy.toLocaleString('en-US')}
                       </span>
                     </div>
                   </div>

@@ -72,7 +72,7 @@ export default function AdminVehicleDetail({ params }: { params: { id: string } 
               {vehicle.year} {vehicle.make} {vehicle.model} {vehicle.badge}
             </h1>
             <p className="text-slate-500 text-xs font-medium mt-1">
-              VIN: <span className="font-mono text-slate-700 font-semibold">{vehicle.vin}</span> • {(vehicle.km).toLocaleString()} km • {vehicle.auctionDate}
+              VIN: <span className="font-mono text-slate-700 font-semibold">{vehicle.vin}</span> • {(vehicle.km).toLocaleString('en-US')} km • {vehicle.auctionDate}
             </p>
           </div>
 
@@ -161,31 +161,31 @@ export default function AdminVehicleDetail({ params }: { params: { id: string } 
             <div className="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-2.5 text-xs">
               <div className="flex justify-between text-slate-600">
                 <span>FOB in Japanese Yen</span>
-                <span className="font-mono font-bold text-slate-900">¥{(vehicle.fobJpy).toLocaleString()}</span>
+                <span className="font-mono font-bold text-slate-900">¥{(vehicle.fobJpy).toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>FOB converted to NZD (@ 91.24)</span>
-                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.fobConvertedNzd).toLocaleString()}</span>
+                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.fobConvertedNzd).toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>RORO Ocean Freight & Logistics</span>
-                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.freightNzd).toLocaleString()}</span>
+                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.freightNzd).toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between text-slate-600">
                 <span>NZ Entry Compliance & MAF</span>
-                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.complianceNzd).toLocaleString()}</span>
+                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.complianceNzd).toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between text-slate-600 pb-2 border-b border-slate-200">
                 <span>GST (15%)</span>
-                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.gstAndFeesNzd).toLocaleString()}</span>
+                <span className="font-mono font-medium">NZ${(vehicle.costBreakdown.gstAndFeesNzd).toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between font-black text-slate-900 pt-1 text-sm">
                 <span>Total Estimated Landed Cost</span>
-                <span>NZ${(vehicle.landedNzd).toLocaleString()}</span>
+                <span>NZ${(vehicle.landedNzd).toLocaleString('en-US')}</span>
               </div>
               <div className="flex justify-between font-black text-emerald-700 pt-1 text-sm">
                 <span>Target Dealer Profit Spread</span>
-                <span>+NZ${(vehicle.targetMarginNzd).toLocaleString()}</span>
+                <span>+NZ${(vehicle.targetMarginNzd).toLocaleString('en-US')}</span>
               </div>
             </div>
           </div>
@@ -199,10 +199,10 @@ export default function AdminVehicleDetail({ params }: { params: { id: string } 
                 <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
                   <div>
                     <span className="font-bold text-slate-900 block">{comp.source}</span>
-                    <span className="text-[11px] text-slate-400 font-mono">{comp.year} • {(comp.km).toLocaleString()} km</span>
+                    <span className="text-[11px] text-slate-400 font-mono">{comp.year} • {(comp.km).toLocaleString('en-US')} km</span>
                   </div>
                   <div className="text-right">
-                    <span className="font-bold text-slate-900 block">NZ${(comp.price).toLocaleString()}</span>
+                    <span className="font-bold text-slate-900 block">NZ${(comp.price).toLocaleString('en-US')}</span>
                     <span className="text-[10px] text-slate-500">{comp.daysListed} days listed</span>
                   </div>
                 </div>

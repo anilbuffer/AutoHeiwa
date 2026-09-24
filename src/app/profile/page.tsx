@@ -245,7 +245,7 @@ export default function ProfilePage() {
                     Maximum ODO Mileage
                   </label>
                   <span className="text-sm font-black text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-lg">
-                    {(maxKm).toLocaleString()} km
+                    {(maxKm).toLocaleString('en-US')} km
                   </span>
                 </div>
                 <input 
@@ -271,7 +271,7 @@ export default function ProfilePage() {
                     Minimum Target Profit Margin
                   </label>
                   <span className="text-sm font-black text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-lg">
-                    +NZ${(targetMargin).toLocaleString()}
+                    +NZ${(targetMargin).toLocaleString('en-US')}
                   </span>
                 </div>
                 <input 

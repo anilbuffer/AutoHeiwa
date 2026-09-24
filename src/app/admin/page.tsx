@@ -320,7 +320,7 @@ export default function DemandIntelligencePage() {
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
-                {kpiData.searches.toLocaleString()}
+                {kpiData.searches.toLocaleString('en-US')}
               </span>
               <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200 flex items-center gap-0.5">
                 <TrendingUp size={11} /> {kpiData.searchesTrend}
@@ -343,7 +343,7 @@ export default function DemandIntelligencePage() {
             </div>
             <div className="mt-3 flex items-baseline gap-2">
               <span className="text-3xl sm:text-4xl font-black text-[#B30D12] tracking-tight">
-                {kpiData.unmetDemand.toLocaleString()}
+                {kpiData.unmetDemand.toLocaleString('en-US')}
               </span>
               <span className="text-xs font-bold text-[#B30D12] bg-red-100/80 px-2 py-0.5 rounded-full border border-red-200 flex items-center gap-0.5">
                 <TrendingUp size={11} /> {kpiData.unmetTrend}

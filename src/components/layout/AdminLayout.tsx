@@ -18,7 +18,7 @@ import {
   Sliders,
   Database,
   RefreshCw,
-  ExternalLink,
+  LogOut,
   Shield,
   Layers,
   CheckCircle2,
@@ -167,7 +167,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             title="Switch User / Logout"
             className="p-1.5 text-slate-400 hover:text-white hover:bg-[#1B2A4A] rounded-lg transition-colors"
           >
-            <ExternalLink size={14} />
+            <LogOut size={14} />
           </Link>
         </div>
       </aside>

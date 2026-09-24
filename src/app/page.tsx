@@ -273,7 +273,7 @@ export default function Dashboard() {
                             </span>
                           </div>
                           <p className="text-xs font-medium text-slate-500 mt-0.5">
-                            {(vehicle.km).toLocaleString()} km • {vehicle.engine} • {vehicle.color}
+                            {(vehicle.km).toLocaleString('en-US')} km • {vehicle.engine} • {vehicle.color}
                           </p>
                         </div>
 
@@ -297,19 +297,19 @@ export default function Dashboard() {
                         <div>
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">FOB (Tokyo)</span>
                           <span className="font-bold text-slate-800 text-sm font-mono mt-0.5 block">
-                            ¥{(vehicle.fobJpy).toLocaleString()}
+                            ¥{(vehicle.fobJpy).toLocaleString('en-US')}
                           </span>
                         </div>
                         <div>
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. Landed (NZD)</span>
                           <span className="font-bold text-slate-900 text-sm mt-0.5 block">
-                            NZ${(vehicle.landedNzd).toLocaleString()}
+                            NZ${(vehicle.landedNzd).toLocaleString('en-US')}
                           </span>
                         </div>
                         <div>
                           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. NZ Retail</span>
                           <span className="font-bold text-slate-900 text-sm mt-0.5 block">
-                            NZ${(vehicle.estRetailNzd).toLocaleString()}
+                            NZ${(vehicle.estRetailNzd).toLocaleString('en-US')}
                           </span>
                         </div>
                       </div>
@@ -321,10 +321,10 @@ export default function Dashboard() {
                         <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Recommended Max Bid</div>
                         <div className="flex items-baseline gap-2">
                           <span className="text-xl font-black text-[#B30D12]">
-                            NZ${(vehicle.maxBidNzd).toLocaleString()}
+                            NZ${(vehicle.maxBidNzd).toLocaleString('en-US')}
                           </span>
                           <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
-                            +NZ${(vehicle.targetMarginNzd).toLocaleString()} Margin
+                            +NZ${(vehicle.targetMarginNzd).toLocaleString('en-US')} Margin
                           </span>
                         </div>
                       </div>

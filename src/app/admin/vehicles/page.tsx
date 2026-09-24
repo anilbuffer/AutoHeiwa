@@ -148,16 +148,16 @@ export default function AdminVehicles() {
                       {v.dealer}
                     </td>
                     <td className="px-5 py-4 font-mono font-bold text-slate-800">
-                      ¥{(v.fobJpy).toLocaleString()}
+                      ¥{(v.fobJpy).toLocaleString('en-US')}
                     </td>
                     <td className="px-5 py-4 font-bold text-slate-900">
-                      NZ${(v.landedNzd).toLocaleString()}
+                      NZ${(v.landedNzd).toLocaleString('en-US')}
                     </td>
                     <td className="px-5 py-4 font-bold text-slate-900">
-                      NZ${(v.estRetailNzd).toLocaleString()}
+                      NZ${(v.estRetailNzd).toLocaleString('en-US')}
                     </td>
                     <td className="px-5 py-4 font-black text-[#B30D12]">
-                      NZ${(v.maxBidNzd).toLocaleString()}
+                      NZ${(v.maxBidNzd).toLocaleString('en-US')}
                     </td>
                     <td className="px-5 py-4">
                       <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold ${

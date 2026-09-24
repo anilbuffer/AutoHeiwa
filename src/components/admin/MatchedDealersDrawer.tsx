@@ -89,15 +89,15 @@ export default function MatchedDealersDrawer({
             <div className="min-w-0 flex-1 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-slate-900">
-                  {vehicle.km.toLocaleString()} km · Grade {vehicle.grade}/{vehicle.interiorGrade}
+                  {vehicle.km.toLocaleString('en-US')} km · Grade {vehicle.grade}/{vehicle.interiorGrade}
                 </span>
                 <span className="font-black text-[#B30D12]">
-                  NZ${vehicle.fobPriceNzd.toLocaleString()} FOB
+                  NZ${vehicle.fobPriceNzd.toLocaleString('en-US')} FOB
                 </span>
               </div>
               <div className="flex items-center justify-between text-slate-500 mt-1 text-[11px]">
                 <span>Auction: {vehicle.auctionDate}</span>
-                <span>¥{vehicle.fobPriceJpy.toLocaleString()} JPY</span>
+                <span>¥{vehicle.fobPriceJpy.toLocaleString('en-US')} JPY</span>
               </div>
             </div>
           </div>
@@ -158,7 +158,7 @@ export default function MatchedDealersDrawer({
                       "{dealer.wishlistCriteria}"
                     </p>
                     <div className="mt-1.5 flex items-center justify-between text-[11px] text-slate-500 pt-1 border-t border-slate-200/60">
-                      <span>Max Landed Budget: <strong>NZ${dealer.targetBudgetNzd.toLocaleString()}</strong></span>
+                      <span>Max Landed Budget: <strong>NZ${dealer.targetBudgetNzd.toLocaleString('en-US')}</strong></span>
                       <span className="text-emerald-600 font-bold">Within Budget Ceiling</span>
                     </div>
                   </div>

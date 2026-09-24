@@ -123,7 +123,7 @@ export default function MostWantedChart({ segmentFilter = 'All' }: MostWantedCha
                       <strong className="text-slate-900">Avg Days to Sell:</strong> {model.turnDays} days (Trade Me)
                     </span>
                     <span>
-                      <strong className="text-slate-900">Avg Dealer Margin:</strong> NZ${model.avgMarginNzd.toLocaleString()}
+                      <strong className="text-slate-900">Avg Dealer Margin:</strong> NZ${model.avgMarginNzd.toLocaleString('en-US')}
                     </span>
                   </div>
                   <span className="text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">

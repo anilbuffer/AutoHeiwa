@@ -374,10 +374,10 @@ export default function SupplyDemandGapTable({ onSelectModel }: SupplyDemandGapT
                   {/* Margin Potential */}
                   <td className="py-3.5 px-4">
                     <span className="font-black text-emerald-700 text-sm">
-                      +NZ${item.avgDealerMarginNzd.toLocaleString()}
+                      +NZ${item.avgDealerMarginNzd.toLocaleString('en-US')}
                     </span>
                     <span className="block text-[10px] text-slate-400 font-medium">
-                      ¥{item.avgDealerMarginJpy.toLocaleString()} JPY
+                      ¥{item.avgDealerMarginJpy.toLocaleString('en-US')} JPY
                     </span>
                   </td>
 
