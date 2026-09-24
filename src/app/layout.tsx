@@ -1,8 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: '--font-inter' });
+const roboto = Roboto({ 
+  weight: ['300', '400', '500', '700'], 
+  subsets: ["latin"], 
+  variable: '--font-roboto' 
+});
 
 export const metadata: Metadata = {
   title: "AutoHeiwa | SaaS Platform",
@@ -16,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-sans antialiased`}>{children}</body>
+      <body className={`${roboto.variable} font-sans antialiased`}>{children}</body>
     </html>
   );
 }
