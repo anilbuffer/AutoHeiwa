@@ -1,189 +1,450 @@
+"use client";
+
+import React, { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import Link from "next/link";
-import { ChevronDown, ArrowRight } from "lucide-react";
+import { 
+  ChevronDown, 
+  ArrowRight, 
+  Sparkles, 
+  Clock, 
+  TrendingUp, 
+  ShieldCheck, 
+  Flame, 
+  Filter, 
+  CheckCircle2, 
+  Car, 
+  DollarSign, 
+  Layers,
+  SlidersHorizontal,
+  ChevronRight,
+  ExternalLink
+} from "lucide-react";
+import { VEHICLES, GLOBAL_SETTINGS } from "@/lib/data";
 
 export default function Dashboard() {
+  const [filterTab, setFilterTab] = useState<'all' | 'priority' | 'under20k'>('all');
+
+  const filteredVehicles = VEHICLES.filter(v => {
+    if (filterTab === 'priority') return v.status === 'Priority';
+    if (filterTab === 'under20k') return v.landedNzd <= 20000;
+    return true;
+  });
+
   return (
     <AppLayout>
-      <div className="max-w-[1400px] mx-auto space-y-8">
+      <div className="space-y-8 pb-12">
         
-        {/* Header Section */}
-        <div>
-          <h1 className="text-[28px] font-extrabold text-[#111827] mb-1">Good morning, David</h1>
-          <p className="text-gray-500 text-sm font-medium">Find vehicles that match your buying profile.</p>
-          <div className="mt-5 inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-lg shadow-sm text-[13px] font-bold text-gray-700 cursor-pointer hover:bg-gray-50 transition-colors">
-            Auckland Auto Group
-            <ChevronDown size={14} className="text-gray-400" />
+        {/* Top Header Briefing */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <div>
+            <div className="flex items-center gap-2 mb-1.5">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-700 border border-red-200">
+                <span className="w-1.5 h-1.5 rounded-full bg-red-600 animate-ping"></span>
+                Tokyo Auctions Live
+              </span>
+              <span className="text-xs text-slate-400 font-medium">Updated 3 mins ago</span>
+            </div>
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Good morning, David
+            </h1>
+            <p className="text-slate-500 text-sm font-medium mt-0.5">
+              We identified <strong className="text-slate-800">32 high-arbitrage vehicles</strong> matching Auckland Auto Group’s criteria across USS Tokyo & Yokohama.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            <div className="px-3.5 py-2 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+              <span className="text-slate-500 font-medium block text-[10px]">CURRENT FX BENCHMARK</span>
+              <span className="font-bold text-slate-900 flex items-center gap-1">
+                1 NZD = {GLOBAL_SETTINGS.fxRateJpyNzd} JPY
+                <span className="text-[10px] text-emerald-600 font-semibold bg-emerald-50 px-1 rounded">▲ +0.3%</span>
+              </span>
+            </div>
+            <Link
+              href="/vehicles"
+              className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold transition-all shadow-sm hover:shadow flex items-center gap-1.5"
+            >
+              Browse All Lots <ArrowRight size={14} />
+            </Link>
           </div>
         </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-5">
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.08)] flex flex-col justify-center transition-transform hover:-translate-y-1">
-            <p className="text-[32px] font-extrabold text-[#111827] leading-tight">32</p>
-            <p className="text-[12px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Opportunities</p>
+        {/* 4 Premium KPI Metric Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {/* Card 1 */}
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Qualified Lots</span>
+              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs">
+                <Car size={16} />
+              </div>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl font-black text-slate-900 tracking-tight">32</span>
+              <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">+5 today</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2 font-medium">Matching Auckland target models</p>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.08)] flex flex-col justify-center transition-transform hover:-translate-y-1">
-            <p className="text-[32px] font-extrabold text-blue-600 leading-tight">06</p>
-            <p className="text-[12px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Priority Buys</p>
+
+          {/* Card 2 */}
+          <div className="bg-gradient-to-br from-white to-emerald-50/30 p-5 sm:p-6 rounded-2xl border border-emerald-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-emerald-700 uppercase tracking-wider">Priority Buys</span>
+              <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs">
+                <Flame size={16} />
+              </div>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl font-black text-emerald-700 tracking-tight">06</span>
+              <span className="text-xs font-bold text-emerald-800 bg-emerald-100/80 px-1.5 py-0.5 rounded">Spread &gt; NZ$3.5k</span>
+            </div>
+            <p className="text-xs text-slate-600 mt-2 font-medium">Top 15% estimated dealer margin</p>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.08)] flex flex-col justify-center transition-transform hover:-translate-y-1">
-            <p className="text-[32px] font-extrabold text-[#111827] leading-tight">NZ$18,450</p>
-            <p className="text-[12px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Median Landed Cost</p>
+
+          {/* Card 3 */}
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Median Landed Cost</span>
+              <div className="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center font-bold text-xs">
+                <DollarSign size={16} />
+              </div>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl font-black text-slate-900 tracking-tight">NZ$18,450</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2 font-medium">~NZ$4,800 below NZ yard retail avg</p>
           </div>
-          <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.08)] flex flex-col justify-center transition-transform hover:-translate-y-1">
-            <p className="text-[32px] font-extrabold text-[#111827] leading-tight">31 days</p>
-            <p className="text-[12px] font-bold text-gray-400 mt-1 uppercase tracking-wider">Avg. Market Days</p>
+
+          {/* Card 4 */}
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] hover-lift">
+            <div className="flex items-center justify-between">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Turnaround Velocity</span>
+              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-bold text-xs">
+                <TrendingUp size={16} />
+              </div>
+            </div>
+            <div className="mt-3 flex items-baseline gap-2">
+              <span className="text-3xl font-black text-slate-900 tracking-tight">28 days</span>
+              <span className="text-xs font-bold text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded">Fast-moving</span>
+            </div>
+            <p className="text-xs text-slate-500 mt-2 font-medium">Auckland hybrid listing turnaround</p>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 pt-2">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
-          {/* Recommended Vehicles */}
+          {/* Recommended Vehicles Column (2 Spans) */}
           <div className="lg:col-span-2 space-y-5">
-            <div className="flex items-center justify-between mb-1">
-              <h2 className="text-[18px] font-extrabold text-[#111827]">Recommended Vehicles</h2>
-              <Link href="/vehicles" className="text-[13px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition-colors">
-                View All <ArrowRight size={14} />
-              </Link>
-            </div>
-
-            <div className="space-y-5">
-              {/* Vehicle Card 1 */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] overflow-hidden flex flex-col sm:flex-row transition-shadow hover:shadow-md group cursor-pointer">
-                <div className="w-full sm:w-1/3 h-52 sm:h-auto bg-[#f4f7f6] relative">
-                  {/* Mock Image Placeholder */}
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-300">
-                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  </div>
-                </div>
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-xl font-extrabold text-[#111827] group-hover:text-blue-600 transition-colors">Toyota Aqua S</h3>
-                    <p className="text-[13px] font-medium text-gray-500 mt-1">2019 • 58,200 km • Grade 4.5</p>
-                    
-                    <div className="grid grid-cols-2 gap-y-3 gap-x-6 mt-5 mb-5 text-[13px]">
-                      <div className="text-gray-500 font-medium">FOB</div>
-                      <div className="font-bold text-right text-[#111827]">¥1,420,000</div>
-                      <div className="text-gray-500 font-medium">Landed</div>
-                      <div className="font-bold text-right text-[#111827]">NZ$19,000</div>
-                      <div className="text-gray-500 font-medium">Retail</div>
-                      <div className="font-bold text-right text-[#111827]">NZ$24,500</div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-5 border-t border-gray-100 flex items-center justify-between">
-                    <div>
-                      <div className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Max Bid</div>
-                      <div className="text-lg font-extrabold text-blue-600">NZ$20,500</div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-green-50 text-green-700 uppercase tracking-wider">
-                        <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span> Priority
-                      </span>
-                      <Link href="/vehicles/1" className="text-[13px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                        Details <ArrowRight size={14} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              {/* Vehicle Card 2 */}
-              <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] overflow-hidden flex flex-col sm:flex-row transition-shadow hover:shadow-md group cursor-pointer">
-                <div className="w-full sm:w-1/3 h-52 sm:h-auto bg-[#f4f7f6] relative">
-                  <div className="absolute inset-0 flex items-center justify-center text-gray-300">
-                    <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                  </div>
-                </div>
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-xl font-extrabold text-[#111827] group-hover:text-blue-600 transition-colors">Honda Fit Hybrid</h3>
-                    <p className="text-[13px] font-medium text-gray-500 mt-1">2020 • 45,000 km • Grade 4.0</p>
-                    
-                    <div className="grid grid-cols-2 gap-y-3 gap-x-6 mt-5 mb-5 text-[13px]">
-                      <div className="text-gray-500 font-medium">FOB</div>
-                      <div className="font-bold text-right text-[#111827]">¥1,350,000</div>
-                      <div className="text-gray-500 font-medium">Landed</div>
-                      <div className="font-bold text-right text-[#111827]">NZ$17,800</div>
-                      <div className="text-gray-500 font-medium">Retail</div>
-                      <div className="font-bold text-right text-[#111827]">NZ$22,000</div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-5 border-t border-gray-100 flex items-center justify-between">
-                    <div>
-                      <div className="text-[11px] text-gray-400 font-bold uppercase tracking-wider">Max Bid</div>
-                      <div className="text-lg font-extrabold text-blue-600">NZ$19,200</div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold bg-yellow-50 text-yellow-700 uppercase tracking-wider">
-                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span> Consider
-                      </span>
-                      <Link href="/vehicles/2" className="text-[13px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
-                        Details <ArrowRight size={14} />
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Opportunity Overview */}
-          <div className="lg:col-span-1">
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-[0_2px_10px_-3px_rgba(6,81,237,0.05)] p-7 sticky top-6">
-              <h2 className="text-[18px] font-extrabold text-[#111827] mb-8">Opportunity Overview</h2>
-              
-              <div className="flex justify-center mb-10">
-                {/* Minimalist donut chart placeholder */}
-                <div className="relative w-36 h-36">
-                  <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90 drop-shadow-sm">
-                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#f1f5f9" strokeWidth="18" />
-                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#eab308" strokeWidth="18" strokeDasharray="238.76" strokeDashoffset="110" />
-                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#22c55e" strokeWidth="18" strokeDasharray="238.76" strokeDashoffset="180" />
-                  </svg>
-                  <div className="absolute inset-0 flex items-center justify-center flex-col">
-                    <span className="text-[28px] font-extrabold text-[#111827] leading-none">32</span>
-                    <span className="text-[11px] font-bold text-gray-400 uppercase tracking-widest mt-1">Total</span>
-                  </div>
-                </div>
+            {/* Sub-header with Filter Tabs */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <h2 className="text-lg font-black text-slate-900 tracking-tight">
+                  High-Margin Recommended Lots
+                </h2>
+                <span className="px-2 py-0.5 bg-slate-100 text-slate-700 text-xs font-bold rounded-full">
+                  {filteredVehicles.length}
+                </span>
               </div>
 
-              <div className="space-y-5">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-green-500 shadow-sm"></div>
-                    <span className="text-[13px] font-bold text-gray-600">Priority</span>
-                  </div>
-                  <span className="text-[15px] font-extrabold text-[#111827]">06</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-yellow-500 shadow-sm"></div>
-                    <span className="text-[13px] font-bold text-gray-600">Consider</span>
-                  </div>
-                  <span className="text-[15px] font-extrabold text-[#111827]">14</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-gray-200 shadow-sm"></div>
-                    <span className="text-[13px] font-bold text-gray-600">Review</span>
-                  </div>
-                  <span className="text-[15px] font-extrabold text-[#111827]">12</span>
-                </div>
-              </div>
-              
-              <div className="mt-8 pt-6 border-t border-gray-100">
-                <button className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-[13px] font-bold rounded-lg transition-colors shadow-sm">
-                  View All Opportunities
+              {/* Filter Pills */}
+              <div className="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl">
+                <button
+                  onClick={() => setFilterTab('all')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    filterTab === 'all' 
+                      ? 'bg-white text-slate-900 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  All Lots
+                </button>
+                <button
+                  onClick={() => setFilterTab('priority')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    filterTab === 'priority' 
+                      ? 'bg-emerald-600 text-white shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Priority Buys (Score 90+)
+                </button>
+                <button
+                  onClick={() => setFilterTab('under20k')}
+                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
+                    filterTab === 'under20k' 
+                      ? 'bg-white text-slate-900 shadow-xs' 
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  Under NZ$20k
                 </button>
               </div>
             </div>
+
+            {/* Vehicle Cards List */}
+            <div className="space-y-4">
+              {filteredVehicles.map((vehicle) => (
+                <div 
+                  key={vehicle.id} 
+                  className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden flex flex-col md:flex-row hover-lift group"
+                >
+                  {/* Vehicle Image with Floating Badges */}
+                  <div className="w-full md:w-[260px] h-[200px] md:h-auto relative shrink-0 overflow-hidden bg-slate-100">
+                    <img 
+                      src={vehicle.image} 
+                      alt={`${vehicle.make} ${vehicle.model}`} 
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-black/20" />
+                    
+                    {/* Top Grade Stamp */}
+                    <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5">
+                      <span className="px-2 py-0.5 bg-slate-900/90 backdrop-blur-md text-white font-extrabold text-[11px] rounded-md border border-white/20 shadow-sm">
+                        GRADE {vehicle.grade} / {vehicle.interiorGrade}
+                      </span>
+                    </div>
+
+                    {/* Time Left Badge */}
+                    <div className="absolute top-2.5 right-2.5">
+                      <span className="px-2 py-0.5 bg-red-600/95 backdrop-blur-md text-white font-bold text-[10px] rounded-md flex items-center gap-1 shadow-sm">
+                        <Clock size={10} /> {vehicle.timeLeft}
+                      </span>
+                    </div>
+
+                    {/* Bottom Lot and House */}
+                    <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-[11px] text-slate-200 font-medium">
+                      <span>{vehicle.auctionHouse}</span>
+                      <span className="font-mono text-white">#{vehicle.lotNumber}</span>
+                    </div>
+                  </div>
+
+                  {/* Vehicle Content & Financial Stack */}
+                  <div className="p-5 sm:p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <div className="flex items-start justify-between gap-2">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-lg font-black text-slate-900 group-hover:text-red-600 transition-colors">
+                              {vehicle.year} {vehicle.make} {vehicle.model}
+                            </h3>
+                            <span className="text-xs font-semibold text-slate-500">
+                              {vehicle.badge}
+                            </span>
+                          </div>
+                          <p className="text-xs font-medium text-slate-500 mt-0.5">
+                            {(vehicle.km).toLocaleString()} km • {vehicle.engine} • {vehicle.color}
+                          </p>
+                        </div>
+
+                        {/* AI Score Badge */}
+                        <div className="text-right shrink-0">
+                          <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold ${
+                            vehicle.status === 'Priority' 
+                              ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                              : vehicle.status === 'Consider' 
+                              ? 'bg-amber-50 text-amber-700 border border-amber-200' 
+                              : 'bg-slate-100 text-slate-600 border border-slate-200'
+                          }`}>
+                            <Sparkles size={12} />
+                            Score {vehicle.score}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Pricing Grid */}
+                      <div className="grid grid-cols-3 gap-2 sm:gap-4 mt-4 p-3 bg-slate-50/80 rounded-xl border border-slate-100 text-xs">
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">FOB (Tokyo)</span>
+                          <span className="font-bold text-slate-800 text-sm font-mono mt-0.5 block">
+                            ¥{(vehicle.fobJpy).toLocaleString()}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. Landed (NZD)</span>
+                          <span className="font-bold text-slate-900 text-sm mt-0.5 block">
+                            NZ${(vehicle.landedNzd).toLocaleString()}
+                          </span>
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Est. NZ Retail</span>
+                          <span className="font-bold text-slate-900 text-sm mt-0.5 block">
+                            NZ${(vehicle.estRetailNzd).toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Bottom Action Footer */}
+                    <div className="pt-4 mt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Recommended Max Bid</div>
+                        <div className="flex items-baseline gap-2">
+                          <span className="text-xl font-black text-red-600">
+                            NZ${(vehicle.maxBidNzd).toLocaleString()}
+                          </span>
+                          <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded">
+                            +NZ${(vehicle.targetMarginNzd).toLocaleString()} Margin
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Link 
+                          href={`/vehicles/${vehicle.id}`} 
+                          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold rounded-xl transition-all shadow-xs flex items-center gap-1.5"
+                        >
+                          Calculate & Bid <ArrowRight size={13} />
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center pt-2">
+              <Link 
+                href="/vehicles"
+                className="inline-flex items-center gap-2 text-xs font-bold text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100/80 px-5 py-2.5 rounded-xl border border-red-200 transition-colors"
+              >
+                View all 32 Live Auction Lots <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
+
+          {/* Right Column: Opportunity Overview & Intelligence (1 Span) */}
+          <div className="space-y-6">
+            
+            {/* Opportunity Radar Card */}
+            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-base font-black text-slate-900 tracking-tight">
+                  Opportunity Arbitrage
+                </h2>
+                <span className="text-xs font-bold text-slate-400">Total: 32</span>
+              </div>
+
+              {/* Minimalist SVG Gauge */}
+              <div className="flex justify-center my-6">
+                <div className="relative w-40 h-40">
+                  <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90">
+                    <circle cx="50" cy="50" r="38" fill="transparent" stroke="#E2E8F0" strokeWidth="16" />
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r="38" 
+                      fill="transparent" 
+                      stroke="#10B981" 
+                      strokeWidth="16" 
+                      strokeDasharray="238.7" 
+                      strokeDashoffset="180" 
+                      strokeLinecap="round"
+                    />
+                    <circle 
+                      cx="50" 
+                      cy="50" 
+                      r="38" 
+                      fill="transparent" 
+                      stroke="#F59E0B" 
+                      strokeWidth="16" 
+                      strokeDasharray="238.7" 
+                      strokeDashoffset="110" 
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                  <div className="absolute inset-0 flex items-center justify-center flex-col">
+                    <span className="text-3xl font-black text-slate-900 leading-none">32</span>
+                    <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Live Matches</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Status Breakdown */}
+              <div className="space-y-3 pt-2 text-xs">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-emerald-50/50 border border-emerald-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+                    <span className="font-bold text-slate-800">Priority Buys (Score 90+)</span>
+                  </div>
+                  <div className="font-black text-emerald-700">06 Lots</div>
+                </div>
+
+                <div className="flex items-center justify-between p-2 rounded-xl bg-amber-50/50 border border-amber-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span className="font-bold text-slate-800">Consider (Score 75-89)</span>
+                  </div>
+                  <div className="font-black text-amber-700">14 Lots</div>
+                </div>
+
+                <div className="flex items-center justify-between p-2 rounded-xl bg-slate-50 border border-slate-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                    <span className="font-bold text-slate-600">Review / Under Target</span>
+                  </div>
+                  <div className="font-black text-slate-700">12 Lots</div>
+                </div>
+              </div>
+
+              <div className="mt-6 pt-4 border-t border-slate-100">
+                <div className="text-[11px] text-slate-500 flex items-center gap-1.5 mb-3">
+                  <ShieldCheck size={14} className="text-blue-600 shrink-0" />
+                  <span>Based on Auckland Auto Group margin criteria (&gt;NZ$3,500 target).</span>
+                </div>
+                <Link
+                  href="/profile"
+                  className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-colors block text-center"
+                >
+                  Adjust Buying Preferences
+                </Link>
+              </div>
+            </div>
+
+            {/* Live Auction Session Card */}
+            <div className="bg-slate-900 text-white rounded-2xl border border-slate-800 p-6 shadow-md">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[11px] font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
+                  Live Auction Lane
+                </span>
+                <span className="text-xs text-slate-400 font-mono">Tokyo (JST)</span>
+              </div>
+              <h3 className="text-base font-black text-white">USS Tokyo Premier Lane</h3>
+              <p className="text-xs text-slate-400 mt-1 leading-relaxed">
+                Lane 3 bidding closes in <strong>02 hours 45 mins</strong>. 8 Priority hybrid units are scheduled in this block.
+              </p>
+
+              <div className="mt-5 space-y-2 text-xs">
+                <div className="flex justify-between py-1.5 border-b border-slate-800 text-slate-300">
+                  <span className="text-slate-400">Lot #40822 (Aqua S)</span>
+                  <span className="font-bold text-emerald-400">¥1,420,000 Target</span>
+                </div>
+                <div className="flex justify-between py-1.5 border-b border-slate-800 text-slate-300">
+                  <span className="text-slate-400">Lot #18940 (Fit e:HEV)</span>
+                  <span className="font-bold text-emerald-400">¥1,350,000 Target</span>
+                </div>
+                <div className="flex justify-between py-1.5 text-slate-300">
+                  <span className="text-slate-400">Lot #77215 (C-HR LED)</span>
+                  <span className="font-bold text-emerald-400">¥1,680,000 Target</span>
+                </div>
+              </div>
+
+              <div className="mt-5 pt-3">
+                <Link
+                  href="/vehicles"
+                  className="w-full py-2.5 bg-red-600 hover:bg-red-700 text-white text-xs font-bold rounded-xl transition-all shadow-sm block text-center"
+                >
+                  Open Live Auction Bidding Feed
+                </Link>
+              </div>
+            </div>
+
           </div>
 
         </div>
+
       </div>
     </AppLayout>
   );

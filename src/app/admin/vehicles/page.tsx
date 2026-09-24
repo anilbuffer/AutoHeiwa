@@ -1,71 +1,179 @@
+"use client";
+
+import React, { useState, useMemo } from "react";
 import AdminLayout from "@/components/layout/AdminLayout";
 import Link from "next/link";
-import { ArrowRight, ChevronDown } from "lucide-react";
+import { 
+  ArrowRight, 
+  Search, 
+  ChevronDown, 
+  Sparkles, 
+  Filter, 
+  SlidersHorizontal,
+  ExternalLink,
+  Car,
+  Building2,
+  Clock
+} from "lucide-react";
+import { VEHICLES, DEALERS } from "@/lib/data";
 
 export default function AdminVehicles() {
-  const vehicles = [
-    { id: 1, name: "Toyota Aqua", dealer: "Auckland", score: 91, status: "Priority", color: "green" },
-    { id: 2, name: "Honda Fit", dealer: "Hamilton", score: 87, status: "Priority", color: "green" },
-    { id: 3, name: "Mazda Axela", dealer: "Auckland", score: 74, status: "Consider", color: "yellow" },
-    { id: 4, name: "Nissan Note", dealer: "Christch.", score: 61, status: "Review", color: "gray" },
-  ];
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDealer, setSelectedDealer] = useState("All");
+  const [selectedStatus, setSelectedStatus] = useState("All");
+
+  const filteredVehicles = useMemo(() => {
+    return VEHICLES.filter((v) => {
+      const matchesSearch = 
+        v.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        v.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        v.lotNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        v.vin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        v.auctionHouse.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesDealer = selectedDealer === "All" || v.dealer === selectedDealer;
+      const matchesStatus = selectedStatus === "All" || v.status === selectedStatus;
+
+      return matchesSearch && matchesDealer && matchesStatus;
+    });
+  }, [searchTerm, selectedDealer, selectedStatus]);
 
   return (
     <AdminLayout>
-      <div className="max-w-6xl mx-auto space-y-6">
+      <div className="space-y-6 pb-16">
         
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">Vehicles</h1>
-          <p className="text-gray-500 dark:text-gray-400">All auction vehicles and opportunity intelligence.</p>
-        </div>
-
-        {/* Filters */}
-        <div className="flex flex-wrap gap-2">
-          {['Make', 'Model', 'Year', 'Score', 'Status'].map((filter) => (
-            <div key={filter} className="flex items-center justify-between px-4 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg cursor-pointer transition-colors shadow-sm gap-2">
-              <span className="text-sm font-medium text-gray-700 dark:text-gray-200">{filter}</span>
-              <ChevronDown size={16} className="text-gray-400" />
+        {/* Header */}
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 mb-1">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
+                Brokerage Master Database
+              </span>
             </div>
-          ))}
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              Auction Inventory & Dealer Allocations
+            </h1>
+            <p className="text-slate-500 text-sm font-medium mt-0.5">
+              Review and manage all Japanese auction lots, margin parameters, and dealer assignments.
+            </p>
+          </div>
+
+          <div className="text-xs font-bold text-slate-500 bg-slate-50 px-3.5 py-2 rounded-xl border border-slate-200">
+            Total Scraped Lots: <span className="text-slate-900 font-extrabold">{VEHICLES.length} Qualified</span>
+          </div>
         </div>
 
-        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">38 vehicles</p>
+        {/* Filter Bar */}
+        <div className="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] space-y-3">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="relative">
+              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <input 
+                type="text" 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search vehicle, VIN, lot #, auction house..." 
+                className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 text-xs font-medium outline-none transition-all placeholder:text-slate-400"
+              />
+            </div>
 
-        {/* Vehicles Table */}
-        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
+            <div className="relative">
+              <select
+                value={selectedDealer}
+                onChange={(e) => setSelectedDealer(e.target.value)}
+                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
+              >
+                <option value="All">All Dealerships</option>
+                {DEALERS.map(d => (
+                  <option key={d.id} value={d.name}>{d.name}</option>
+                ))}
+              </select>
+              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
+            </div>
+
+            <div className="relative">
+              <select
+                value={selectedStatus}
+                onChange={(e) => setSelectedStatus(e.target.value)}
+                className="w-full appearance-none px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl focus:bg-white focus:border-blue-500 text-xs font-semibold text-slate-800 outline-none transition-all cursor-pointer"
+              >
+                <option value="All">All Statuses</option>
+                <option value="Priority">Priority Buy Only</option>
+                <option value="Consider">Consider</option>
+                <option value="Review">Under Review</option>
+              </select>
+              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" size={14} />
+            </div>
+          </div>
+        </div>
+
+        {/* High Density Table */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
           <div className="overflow-x-auto">
-            <table className="w-full text-sm text-left">
-              <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
+            <table className="w-full text-xs text-left">
+              <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
                 <tr>
-                  <th className="px-6 py-4 font-medium">Vehicle</th>
-                  <th className="px-6 py-4 font-medium">Dealer</th>
-                  <th className="px-6 py-4 font-medium">Score</th>
-                  <th className="px-6 py-4 font-medium">Status</th>
-                  <th className="px-6 py-4 font-medium text-right">Action</th>
+                  <th className="px-5 py-3.5">Vehicle</th>
+                  <th className="px-5 py-3.5">Auction House & Lot</th>
+                  <th className="px-5 py-3.5">Matched Dealer</th>
+                  <th className="px-5 py-3.5">FOB (JPY)</th>
+                  <th className="px-5 py-3.5">Est. Landed (NZD)</th>
+                  <th className="px-5 py-3.5">Est. Retail</th>
+                  <th className="px-5 py-3.5">Max Bid</th>
+                  <th className="px-5 py-3.5">AI Score</th>
+                  <th className="px-5 py-3.5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-700">
-                {vehicles.map((v) => (
-                  <tr key={v.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                    <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{v.name}</td>
-                    <td className="px-6 py-4 text-gray-600 dark:text-gray-400">{v.dealer}</td>
-                    <td className="px-6 py-4 font-bold text-gray-900 dark:text-white">{v.score}</td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${
-                        v.color === 'green' ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' : 
-                        v.color === 'yellow' ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' :
-                        'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300'
+              <tbody className="divide-y divide-slate-100 font-medium">
+                {filteredVehicles.map((v) => (
+                  <tr key={v.id} className="hover:bg-slate-50/60 transition-colors">
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <img 
+                          src={v.image} 
+                          alt={v.model} 
+                          className="w-12 h-10 object-cover rounded-lg shrink-0 border border-slate-200" 
+                        />
+                        <div>
+                          <div className="font-black text-slate-900">{v.year} {v.make} {v.model}</div>
+                          <div className="text-[11px] text-slate-500 font-mono">{v.vin}</div>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-5 py-4">
+                      <div className="font-bold text-slate-800">{v.auctionHouse}</div>
+                      <div className="text-[11px] text-slate-400 font-mono">Lot #{v.lotNumber} • Grade {v.grade}</div>
+                    </td>
+                    <td className="px-5 py-4 font-bold text-slate-800">
+                      {v.dealer}
+                    </td>
+                    <td className="px-5 py-4 font-mono font-bold text-slate-800">
+                      ¥{(v.fobJpy).toLocaleString()}
+                    </td>
+                    <td className="px-5 py-4 font-bold text-slate-900">
+                      NZ${(v.landedNzd).toLocaleString()}
+                    </td>
+                    <td className="px-5 py-4 font-bold text-slate-900">
+                      NZ${(v.estRetailNzd).toLocaleString()}
+                    </td>
+                    <td className="px-5 py-4 font-black text-red-600">
+                      NZ${(v.maxBidNzd).toLocaleString()}
+                    </td>
+                    <td className="px-5 py-4">
+                      <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold ${
+                        v.status === 'Priority' 
+                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
+                          : 'bg-amber-50 text-amber-700 border border-amber-200'
                       }`}>
-                        <span className={`w-1.5 h-1.5 rounded-full ${
-                          v.color === 'green' ? 'bg-green-500' : 
-                          v.color === 'yellow' ? 'bg-yellow-500' : 
-                          'bg-gray-500'
-                        }`}></span> {v.status}
+                        <Sparkles size={11} /> {v.score}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
-                      <Link href={`/admin/vehicles/${v.id}`} className="text-sm font-medium text-blue-600 hover:text-blue-700 inline-flex items-center gap-1">
-                        View <ArrowRight size={16} />
+                    <td className="px-5 py-4 text-right">
+                      <Link 
+                        href={`/admin/vehicles/${v.id}`} 
+                        className="px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-bold inline-flex items-center gap-1"
+                      >
+                        Inspect <ArrowRight size={12} />
                       </Link>
                     </td>
                   </tr>

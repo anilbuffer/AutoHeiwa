@@ -1,149 +1,239 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Car, Lock, Mail, ArrowRight } from 'lucide-react';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { 
+  Lock, 
+  Mail, 
+  ArrowRight, 
+  Building2, 
+  Shield, 
+  CheckCircle2, 
+  Sparkles, 
+  TrendingUp,
+  Clock,
+  Car
+} from "lucide-react";
+import Link from "next/link";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loadingRole, setLoadingRole] = useState<'dealer' | 'admin' | null>(null);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    // Simple MVP routing logic based on email
-    if (email.toLowerCase().includes('admin')) {
-      router.push('/admin');
+    if (email.toLowerCase().includes("admin")) {
+      router.push("/admin");
     } else {
-      router.push('/');
+      router.push("/");
     }
   };
 
   const loginAsDemo = (role: 'dealer' | 'admin') => {
+    setLoadingRole(role);
     if (role === 'admin') {
-      setEmail('admin@autoheiwa.com');
-      setPassword('password123');
-      setTimeout(() => router.push('/admin'), 500);
+      setEmail("admin@autoheiwa.com");
+      setPassword("brokerSecure2026");
+      setTimeout(() => router.push("/admin"), 400);
     } else {
-      setEmail('david@aucklandauto.co.nz');
-      setPassword('password123');
-      setTimeout(() => router.push('/'), 500);
+      setEmail("david@aucklandauto.co.nz");
+      setPassword("dealerSecure2026");
+      setTimeout(() => router.push("/"), 400);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-md">
-            <span className="text-white font-bold text-3xl leading-none">A</span>
+    <div className="min-h-screen bg-slate-950 flex font-sans antialiased text-slate-800">
+      
+      {/* Left Column: Cinematic Brand Showcase (Hidden on mobile) */}
+      <div className="hidden lg:flex lg:w-1/2 relative bg-slate-900 overflow-hidden flex-col justify-between p-12 text-white">
+        {/* Background Image with Dark Vignette */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center opacity-40 mix-blend-luminosity scale-105"
+          style={{ 
+            backgroundImage: `url('https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1600&q=80')` 
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/80 to-slate-950/40" />
+
+        {/* Top Brand Logo */}
+        <div className="relative z-10 flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center shadow-lg shadow-red-950/60">
+            <span className="text-white font-extrabold text-xl tracking-wider">和</span>
+          </div>
+          <div>
+            <div className="flex items-center gap-1.5">
+              <span className="text-lg font-black text-white tracking-wider leading-none">AUTOHEIWA</span>
+              <span className="text-[10px] px-2 py-0.5 rounded font-bold bg-red-500/20 text-red-400 border border-red-500/30">NZ</span>
+            </div>
+            <span className="text-[10px] font-semibold text-slate-400 tracking-widest block mt-0.5">
+              JAPANESE AUCTION INTELLIGENCE
+            </span>
           </div>
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-          AutoHeiwa
-        </h2>
-        <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-400">
-          Sign in to access your portal
-        </p>
+
+        {/* Mid Hero Value Proposition */}
+        <div className="relative z-10 space-y-6 my-auto max-w-lg">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-500/30 text-xs font-bold">
+            <Sparkles size={12} />
+            Live Auction Lanes: Tokyo, Yokohama, Kobe & Nagoya
+          </div>
+
+          <h1 className="text-4xl font-black text-white tracking-tight leading-tight">
+            Institutional Japanese vehicle sourcing & landed margin arbitrage.
+          </h1>
+
+          <p className="text-sm text-slate-300 font-medium leading-relaxed">
+            Real-time Trade Me, Turners, and AutoTrader market intelligence calculated against live JPY/NZD exchange rates, ocean shipping tariffs, and entry compliance.
+          </p>
+
+          {/* Quick Metrics */}
+          <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-800">
+            <div>
+              <span className="text-2xl font-black text-white block">48k+</span>
+              <span className="text-xs text-slate-400 font-medium">Daily Auction Lots</span>
+            </div>
+            <div>
+              <span className="text-2xl font-black text-emerald-400 block">+NZ$4.2k</span>
+              <span className="text-xs text-slate-400 font-medium">Avg. Dealer Margin</span>
+            </div>
+            <div>
+              <span className="text-2xl font-black text-white block">91.24</span>
+              <span className="text-xs text-slate-400 font-medium">Live JPY/NZD</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Testimonial */}
+        <div className="relative z-10 p-4 rounded-xl bg-slate-900/60 border border-slate-800 backdrop-blur-md">
+          <p className="text-xs text-slate-300 italic">
+            &ldquo;AutoHeiwa turned our import bidding from guesswork into precision arbitrage. We secured 18 Grade 4.5 hybrids last month with guaranteed margin.&rdquo;
+          </p>
+          <div className="flex items-center justify-between mt-2 pt-2 border-t border-slate-800/80 text-[11px]">
+            <span className="font-bold text-white">David Miller</span>
+            <span className="text-slate-400 font-medium">Auckland Auto Group</span>
+          </div>
+        </div>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white dark:bg-gray-800 py-8 px-4 shadow-xl sm:rounded-2xl sm:px-10 border border-gray-100 dark:border-gray-700">
-          <form className="space-y-6" onSubmit={handleLogin}>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Email address
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
+      {/* Right Column: Sleek Login Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12 bg-[#F8FAFC]">
+        <div className="max-w-md w-full space-y-8 bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/90 shadow-[0_8px_30px_rgb(0,0,0,0.04)]">
+          
+          <div>
+            <div className="flex items-center gap-2 lg:hidden mb-4">
+              <div className="w-8 h-8 rounded-lg bg-red-600 flex items-center justify-center text-white font-bold text-sm">
+                和
+              </div>
+              <span className="font-black text-slate-900 tracking-wider">AUTOHEIWA</span>
+            </div>
+            <h2 className="text-2xl font-black text-slate-900 tracking-tight">Sign In to AutoHeiwa</h2>
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              Select a demo portal below or enter your authorized dealer credentials.
+            </p>
+          </div>
+
+          {/* 1-Click Demo Login Pills */}
+          <div className="space-y-2.5">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
+              Instant Demo Access
+            </span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <button
+                type="button"
+                onClick={() => loginAsDemo('dealer')}
+                disabled={loadingRole !== null}
+                className="flex items-center justify-between p-3.5 rounded-xl border border-slate-200 hover:border-slate-900 bg-slate-50 hover:bg-white transition-all text-left group"
+              >
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs font-black text-slate-900">
+                    <Building2 size={14} className="text-emerald-600" />
+                    <span>Dealer Portal</span>
+                  </div>
+                  <div className="text-[10px] text-slate-500 mt-0.5">Auckland Auto Group</div>
                 </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
+                <ArrowRight size={14} className="text-slate-400 group-hover:text-slate-900 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => loginAsDemo('admin')}
+                disabled={loadingRole !== null}
+                className="flex items-center justify-between p-3.5 rounded-xl border border-blue-200 hover:border-blue-600 bg-blue-50/50 hover:bg-white transition-all text-left group"
+              >
+                <div>
+                  <div className="flex items-center gap-1.5 text-xs font-black text-blue-900">
+                    <Shield size={14} className="text-blue-600" />
+                    <span>Admin Portal</span>
+                  </div>
+                  <div className="text-[10px] text-blue-700 mt-0.5">Broker Ops & Tariffs</div>
+                </div>
+                <ArrowRight size={14} className="text-blue-400 group-hover:text-blue-900 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+          </div>
+
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-slate-200"></div>
+            </div>
+            <div className="relative flex justify-center text-[10px] uppercase font-bold text-slate-400">
+              <span className="bg-white px-2">Or with credentials</span>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="text-xs font-bold text-slate-700 block mb-1">Commercial Email</label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <input 
+                  type="email" 
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white rounded-lg py-2.5 outline-none transition-colors"
-                  placeholder="you@example.com"
+                  placeholder="david@aucklandauto.co.nz"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium outline-none focus:bg-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Password
-              </label>
-              <div className="mt-1 relative rounded-md shadow-sm">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  id="password"
-                  name="password"
-                  type="password"
+              <div className="flex items-center justify-between mb-1">
+                <label className="text-xs font-bold text-slate-700">Security Password</label>
+                <a href="#" className="text-[11px] font-bold text-blue-600 hover:underline">Forgot?</a>
+              </div>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+                <input 
+                  type="password" 
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 sm:text-sm border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-700 dark:text-white rounded-lg py-2.5 outline-none transition-colors"
-                  placeholder="••••••••"
+                  placeholder="••••••••••••"
+                  className="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium outline-none focus:bg-white focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  id="remember-me"
-                  name="remember-me"
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                />
-                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                  Remember me
-                </label>
-              </div>
-
-              <div className="text-sm">
-                <a href="#" className="font-medium text-blue-600 hover:text-blue-500">
-                  Forgot password?
-                </a>
-              </div>
-            </div>
-
-            <div>
-              <button
-                type="submit"
-                className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
-              >
-                Sign in <ArrowRight className="ml-2 h-4 w-4" />
-              </button>
-            </div>
+            <button
+              type="submit"
+              className="w-full py-3 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl transition-all shadow-sm hover:shadow flex items-center justify-center gap-1.5"
+            >
+              Sign In to Terminal <ArrowRight size={14} />
+            </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
-            <p className="text-sm text-center text-gray-500 dark:text-gray-400 mb-4">
-              Demo Quick Login
-            </p>
-            <div className="grid grid-cols-2 gap-3">
-              <button
-                onClick={() => loginAsDemo('dealer')}
-                className="flex items-center justify-center gap-2 py-2 px-4 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
-              >
-                <Car className="h-4 w-4" /> Dealer
-              </button>
-              <button
-                onClick={() => loginAsDemo('admin')}
-                className="flex items-center justify-center gap-2 py-2 px-4 border border-blue-200 dark:border-blue-900/50 rounded-lg shadow-sm text-sm font-medium text-blue-700 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-colors"
-              >
-                <Lock className="h-4 w-4" /> Admin
-              </button>
-            </div>
+          <div className="pt-2 text-center text-[11px] text-slate-400 font-medium">
+            Protected by AutoHeiwa 256-bit broker encryption & Tokyo exchange link.
           </div>
+
         </div>
       </div>
+
     </div>
   );
 }

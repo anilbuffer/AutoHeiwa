@@ -1,247 +1,417 @@
+"use client";
+
+import React, { useState } from "react";
 import AppLayout from "@/components/layout/AppLayout";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, ChevronDown, Info } from "lucide-react";
+import { 
+  ArrowLeft, 
+  Sparkles, 
+  ChevronDown, 
+  Info, 
+  Clock, 
+  ShieldCheck, 
+  CheckCircle2, 
+  TrendingUp, 
+  ExternalLink, 
+  Calculator, 
+  HelpCircle,
+  FileCheck2,
+  Calendar,
+  Layers
+} from "lucide-react";
+import { VEHICLES, GLOBAL_SETTINGS } from "@/lib/data";
 
-export default function VehicleDetail() {
+export default function VehicleDetail({ params }: { params: { id: string } }) {
+  // Find vehicle by ID or default to first
+  const vehicleId = parseInt(params?.id) || 1;
+  const vehicle = VEHICLES.find(v => v.id === vehicleId) || VEHICLES[0];
+
+  // Interactive Bid Simulator State
+  const [fobJpy, setFobJpy] = useState(vehicle.fobJpy);
+  const [targetMargin, setTargetMargin] = useState(vehicle.targetMarginNzd);
+  const [bidPlaced, setBidPlaced] = useState(false);
+
+  // Dynamic calculations based on live inputs
+  const fxRate = GLOBAL_SETTINGS.fxRateJpyNzd;
+  const fobNzd = Math.round(fobJpy / fxRate);
+  const freightNzd = GLOBAL_SETTINGS.freightPerUnitNzd;
+  const complianceNzd = GLOBAL_SETTINGS.compliancePerUnitNzd;
+  const landedBeforeGst = fobNzd + freightNzd + complianceNzd;
+  const gst = Math.round(landedBeforeGst * GLOBAL_SETTINGS.gstRate);
+  const totalLandedCost = landedBeforeGst + gst;
+  const maxBidNzd = vehicle.estRetailNzd - targetMargin;
+  const maxBidJpy = Math.round((maxBidNzd - freightNzd - complianceNzd - (maxBidNzd * 0.13)) * fxRate);
+  const profitMarginPercent = Math.round((targetMargin / totalLandedCost) * 100);
+
   return (
     <AppLayout>
-      <div className="max-w-5xl mx-auto space-y-6">
+      <div className="space-y-8 pb-16 max-w-6xl mx-auto">
         
-        {/* Back Link */}
-        <div>
-          <Link href="/vehicles" className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 dark:hover:text-white transition-colors">
-            <ArrowLeft size={16} /> Back to Vehicles
+        {/* Navigation Breadcrumb */}
+        <div className="flex items-center justify-between">
+          <Link 
+            href="/vehicles" 
+            className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 hover:text-slate-900 transition-colors bg-white px-3.5 py-2 rounded-xl border border-slate-200 shadow-2xs"
+          >
+            <ArrowLeft size={14} /> Back to Auction Lots
           </Link>
-        </div>
 
-        {/* Title */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Toyota Aqua S</h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">2019 • 58,200 km • Auction Grade 4.5</p>
-        </div>
-
-        {/* Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 bg-gray-200 dark:bg-gray-800 rounded-xl aspect-[16/9] flex items-center justify-center border border-gray-200 dark:border-gray-700">
-            <span className="text-gray-400">VEHICLE PHOTO</span>
-          </div>
-          
-          <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6 flex flex-col justify-between">
-            <div>
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 mb-6">
-                <span className="w-2 h-2 rounded-full bg-green-500"></span> PRIORITY BUY
-              </div>
-              
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm font-medium text-gray-500">Recommended Max Bid</p>
-                  <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1">NZ$20,500</p>
-                  <p className="text-sm text-gray-500 mt-1">¥1,845,000</p>
-                </div>
-                
-                <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                  <p className="text-sm font-medium text-gray-500">Estimated Retail</p>
-                  <p className="text-xl font-bold text-gray-900 dark:text-white mt-1">NZ$24,500</p>
-                </div>
-              </div>
-            </div>
-            
-            <button className="w-full mt-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors">
-              Set Maximum Bid
-            </button>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-500 font-medium">Japanese Auction Lane:</span>
+            <span className="font-bold text-slate-900 text-xs bg-slate-100 px-2.5 py-1 rounded-lg">
+              {vehicle.auctionHouse} • Lot #{vehicle.lotNumber}
+            </span>
           </div>
         </div>
 
-        {/* AI Recommendation */}
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 rounded-xl border border-blue-100 dark:border-blue-800/50 p-6 flex gap-4">
-          <div className="mt-1">
-            <Sparkles className="text-blue-600 dark:text-blue-400" size={24} />
-          </div>
+        {/* Vehicle Header Brief */}
+        <div className="bg-white p-6 sm:p-7 rounded-2xl border border-slate-200/80 shadow-[0_1px_3px_rgba(0,0,0,0.02)] flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              AI Recommendation
-            </h3>
-            <p className="mt-2 text-gray-700 dark:text-gray-300 leading-relaxed">
-              Strong buying opportunity. This vehicle is priced below similar NZ listings and maintains a healthy estimated margin after import costs.
+            <div className="flex flex-wrap items-center gap-2 mb-2">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                <Sparkles size={12} /> {vehicle.status.toUpperCase()} BUY (Score {vehicle.score}/100)
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-700">
+                Grade {vehicle.grade} / {vehicle.interiorGrade}
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-red-50 text-red-700 border border-red-200 flex items-center gap-1">
+                <Clock size={12} /> {vehicle.timeLeft} left
+              </span>
+            </div>
+
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              {vehicle.year} {vehicle.make} {vehicle.model} {vehicle.badge}
+            </h1>
+            <p className="text-slate-500 text-xs font-medium mt-1">
+              VIN: <span className="font-mono text-slate-700 font-semibold">{vehicle.vin}</span> • {(vehicle.km).toLocaleString()} km verified • {vehicle.engine} • {vehicle.color}
             </p>
           </div>
+
+          <div className="flex items-center gap-3">
+            <div className="text-right">
+              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Recommended Max Bid</span>
+              <span className="text-2xl font-black text-red-600 block">
+                NZ${maxBidNzd.toLocaleString()}
+              </span>
+              <span className="text-[11px] text-slate-400 font-mono">
+                ~¥{maxBidJpy.toLocaleString()} FOB limit
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          
-          <div className="space-y-6">
-            {/* Vehicle Details */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Vehicle Details</h2>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <p className="text-xs text-gray-500 font-medium">Make</p>
-                  <p className="font-semibold text-gray-900 dark:text-white mt-1">Toyota</p>
+        {/* Gallery & Quick Bid Action Top Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Photo Gallery (2 Spans) */}
+          <div className="lg:col-span-2 space-y-3">
+            <div className="h-[380px] rounded-2xl overflow-hidden relative shadow-sm border border-slate-200 bg-slate-900 group">
+              <img 
+                src={vehicle.image} 
+                alt={vehicle.model} 
+                className="w-full h-full object-cover group-hover:scale-102 transition-transform duration-500" 
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent pointer-events-none" />
+              
+              <div className="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-white">
+                <div className="flex items-center gap-2">
+                  <span className="bg-black/60 backdrop-blur-md px-3 py-1 rounded-lg font-bold border border-white/20">
+                    Photo 1 of 3 (Main Exterior)
+                  </span>
+                  <span className="bg-emerald-600/90 backdrop-blur-md px-2.5 py-1 rounded-lg font-bold">
+                    Japanese ODO Verified
+                  </span>
                 </div>
-                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <p className="text-xs text-gray-500 font-medium">Model</p>
-                  <p className="font-semibold text-gray-900 dark:text-white mt-1">Aqua S</p>
+                <span className="text-slate-300 font-mono text-[11px]">
+                  Auction House: {vehicle.auctionHouse}
+                </span>
+              </div>
+            </div>
+
+            {/* Thumbnail Strip */}
+            <div className="grid grid-cols-3 gap-3">
+              {vehicle.gallery.map((img, i) => (
+                <div key={i} className="h-24 rounded-xl overflow-hidden border border-slate-200 cursor-pointer hover:opacity-90 transition-opacity">
+                  <img src={img} alt={`Angle ${i+1}`} className="w-full h-full object-cover" />
                 </div>
-                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <p className="text-xs text-gray-500 font-medium">Year</p>
-                  <p className="font-semibold text-gray-900 dark:text-white mt-1">2019</p>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Bid Card & Action Box */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Estimated Landed Cost</span>
+                <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                  +{profitMarginPercent}% Projected ROI
+                </span>
+              </div>
+
+              <div className="mt-4">
+                <span className="text-3xl font-black text-slate-900 block">
+                  NZ${totalLandedCost.toLocaleString()}
+                </span>
+                <span className="text-xs text-slate-500 font-medium mt-1 block">
+                  Includes CIF freight, NZ compliance & 15% GST
+                </span>
+              </div>
+
+              <div className="mt-6 space-y-3 p-4 bg-slate-50 rounded-xl border border-slate-100 text-xs">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Estimated NZ Retail</span>
+                  <span className="font-bold text-slate-900">NZ${vehicle.estRetailNzd.toLocaleString()}</span>
                 </div>
-                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <p className="text-xs text-gray-500 font-medium">KM</p>
-                  <p className="font-semibold text-gray-900 dark:text-white mt-1">58,200</p>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Target Profit Margin</span>
+                  <span className="font-bold text-emerald-600">+NZ${targetMargin.toLocaleString()}</span>
                 </div>
-                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <p className="text-xs text-gray-500 font-medium">Auction</p>
-                  <p className="font-semibold text-gray-900 dark:text-white mt-1">4.5</p>
-                </div>
-                <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-lg">
-                  <p className="text-xs text-gray-500 font-medium">Auction Date</p>
-                  <p className="font-semibold text-gray-900 dark:text-white mt-1">24 Sep 2026</p>
+                <div className="flex justify-between pt-2 border-t border-slate-200 font-bold">
+                  <span className="text-slate-700">Recommended Max Bid</span>
+                  <span className="text-red-600 font-black">NZ${maxBidNzd.toLocaleString()}</span>
                 </div>
               </div>
             </div>
 
-            {/* Price vs KM Chart (Mock) */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Price vs Kilometres</h2>
-              <div className="h-48 border-l border-b border-gray-300 dark:border-gray-600 relative mt-4 ml-6">
-                <div className="absolute -left-8 bottom-0 text-xs text-gray-500">18k</div>
-                <div className="absolute -left-8 bottom-1/4 text-xs text-gray-500">20k</div>
-                <div className="absolute -left-8 bottom-2/4 text-xs text-gray-500">22k</div>
-                <div className="absolute -left-8 bottom-full text-xs text-gray-500">25k</div>
-                
-                <div className="absolute bottom-[-20px] left-[10%] text-xs text-gray-500">40k</div>
-                <div className="absolute bottom-[-20px] left-[40%] text-xs text-gray-500">50k</div>
-                <div className="absolute bottom-[-20px] left-[70%] text-xs text-gray-500">60k</div>
-                <div className="absolute bottom-[-20px] left-[95%] text-xs text-gray-500">70k</div>
+            <div className="mt-6 pt-4 border-t border-slate-100 space-y-2.5">
+              {bidPlaced ? (
+                <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 text-center animate-in fade-in duration-200">
+                  <p className="text-xs font-black text-emerald-800 flex items-center justify-center gap-1.5">
+                    <CheckCircle2 size={16} className="text-emerald-600" /> Auto-Bid Registered!
+                  </p>
+                  <p className="text-[11px] text-emerald-700 mt-1">
+                    Broker proxy bid placed up to <strong>NZ${maxBidNzd.toLocaleString()}</strong> on USS Tokyo.
+                  </p>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setBidPlaced(true)}
+                  className="w-full py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl transition-all shadow-sm hover:shadow"
+                >
+                  Lock In Maximum Auto-Bid
+                </button>
+              )}
 
-                {/* Plot points */}
-                <div className="absolute bottom-[80%] left-[60%] w-3 h-3 bg-gray-400 rounded-full"></div>
-                <div className="absolute bottom-[50%] left-[20%] w-3 h-3 bg-gray-400 rounded-full"></div>
-                <div className="absolute bottom-[50%] left-[90%] w-3 h-3 bg-gray-400 rounded-full"></div>
-                <div className="absolute bottom-[10%] left-[30%] w-3 h-3 bg-gray-400 rounded-full"></div>
-                
-                {/* Target point */}
-                <div className="absolute bottom-[25%] left-[65%] w-4 h-4 bg-blue-500 transform rotate-45"></div>
+              <button className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors flex items-center justify-center gap-1.5">
+                <FileCheck2 size={14} /> Download Japanese Inspection Sheet (PDF)
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* AI Valuation & Opportunity Intelligence Card */}
+        <div className="bg-gradient-to-r from-red-50/50 via-slate-50 to-blue-50/40 rounded-2xl border border-red-100 p-6 sm:p-7 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+          <div className="flex items-start gap-4">
+            <div className="w-10 h-10 rounded-xl bg-red-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <Sparkles size={20} />
+            </div>
+            <div className="space-y-2 flex-1">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <h3 className="text-base font-black text-slate-900 tracking-tight flex items-center gap-2">
+                  AI Appraisal & Arbitrage Rationale
+                </h3>
+                <span className="text-xs font-bold text-slate-600 bg-white px-2.5 py-0.5 rounded-full border border-slate-200 shadow-2xs">
+                  {vehicle.aiAnalysis.confidence}% Statistical Confidence
+                </span>
               </div>
-              
-              <div className="mt-8 flex items-center justify-center gap-6 text-sm">
-                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-gray-400 rounded-full"></div> <span className="text-gray-600 dark:text-gray-400">NZ comparable</span></div>
-                <div className="flex items-center gap-2"><div className="w-3 h-3 bg-blue-500 transform rotate-45"></div> <span className="text-gray-600 dark:text-gray-400">Heiwa vehicle</span></div>
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
+                {vehicle.aiAnalysis.summary}
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2">
+                {vehicle.aiAnalysis.highlights.map((h, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs font-semibold text-slate-800 bg-white/80 p-2.5 rounded-xl border border-slate-200/60">
+                    <CheckCircle2 size={14} className="text-emerald-600 shrink-0" />
+                    <span>{h}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Interactive Calculator & Price-vs-KM Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          
+          {/* Interactive Landed Cost & Bid Simulator */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6 sm:p-7 space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+                  <Calculator size={16} />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-slate-900">Bid Simulator & Landed Engine</h3>
+                  <p className="text-xs text-slate-400 font-medium">Tweak FOB or target margin to test sensitivities.</p>
+                </div>
+              </div>
+              <span className="text-[11px] font-bold text-slate-400">FX: 1 NZD = {fxRate} JPY</span>
+            </div>
+
+            {/* Sliders / Interactive Inputs */}
+            <div className="space-y-5">
+              <div>
+                <div className="flex justify-between text-xs font-bold mb-1.5">
+                  <span className="text-slate-700">FOB Auction Price (JPY)</span>
+                  <span className="font-mono text-slate-900">¥{fobJpy.toLocaleString()}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min={800000} 
+                  max={2500000} 
+                  step={20000}
+                  value={fobJpy}
+                  onChange={(e) => setFobJpy(parseInt(e.target.value))}
+                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-red-600"
+                />
+              </div>
+
+              <div>
+                <div className="flex justify-between text-xs font-bold mb-1.5">
+                  <span className="text-slate-700">Target Dealer Margin (NZD)</span>
+                  <span className="text-emerald-700 font-bold">NZ${targetMargin.toLocaleString()}</span>
+                </div>
+                <input 
+                  type="range" 
+                  min={1500} 
+                  max={8000} 
+                  step={250}
+                  value={targetMargin}
+                  onChange={(e) => setTargetMargin(parseInt(e.target.value))}
+                  className="w-full h-2 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-emerald-600"
+                />
+              </div>
+            </div>
+
+            {/* Step-by-Step Cost Sheet Accordion / Details */}
+            <div className="p-4 bg-slate-50/80 rounded-xl border border-slate-100 space-y-2.5 text-xs">
+              <div className="flex justify-between text-slate-600">
+                <span>FOB converted to NZD (¥{fobJpy.toLocaleString()})</span>
+                <span className="font-mono font-medium">NZ${fobNzd.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>Ocean Freight (Roll-on / Roll-off)</span>
+                <span className="font-mono font-medium">NZ${freightNzd.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-slate-600">
+                <span>NZ Compliance, Entry & Biosecurity</span>
+                <span className="font-mono font-medium">NZ${complianceNzd.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between text-slate-600 pb-2 border-b border-slate-200">
+                <span>GST (15% on CIF + duty)</span>
+                <span className="font-mono font-medium">NZ${gst.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between font-bold text-slate-900 pt-1">
+                <span>Total Landed Cost to Auckland Yard</span>
+                <span className="text-sm">NZ${totalLandedCost.toLocaleString()}</span>
+              </div>
+              <div className="flex justify-between font-extrabold text-red-600 pt-1 text-sm">
+                <span>Max Allowable Bid for Target Margin</span>
+                <span>NZ${maxBidNzd.toLocaleString()}</span>
               </div>
             </div>
           </div>
 
-          <div className="space-y-6">
-            {/* Market Evidence */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm p-6">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-2">Market Evidence</h2>
-              <p className="text-sm text-gray-500 mb-4">Similar vehicles currently listed in New Zealand.</p>
-              
-              <div className="overflow-x-auto">
-                <table className="w-full text-sm text-left">
-                  <thead className="text-xs text-gray-500 uppercase bg-gray-50 dark:bg-gray-900/50 rounded-t-lg">
-                    <tr>
-                      <th className="px-4 py-3 font-medium rounded-tl-lg">Source</th>
-                      <th className="px-4 py-3 font-medium">Year</th>
-                      <th className="px-4 py-3 font-medium">KM</th>
-                      <th className="px-4 py-3 font-medium">Price</th>
-                      <th className="px-4 py-3 font-medium rounded-tr-lg">Days Listed</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr className="border-b border-gray-100 dark:border-gray-700">
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-200">Trade Me</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">2019</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">61,000</td>
-                      <td className="px-4 py-3 text-gray-900 dark:text-white font-medium">$19,990</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">24</td>
-                    </tr>
-                    <tr className="border-b border-gray-100 dark:border-gray-700">
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-200">Turners</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">2019</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">55,000</td>
-                      <td className="px-4 py-3 text-gray-900 dark:text-white font-medium">$21,500</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">18</td>
-                    </tr>
-                    <tr>
-                      <td className="px-4 py-3 font-medium text-gray-900 dark:text-gray-200">AutoTrader</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">2020</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">48,000</td>
-                      <td className="px-4 py-3 text-gray-900 dark:text-white font-medium">$22,900</td>
-                      <td className="px-4 py-3 text-gray-600 dark:text-gray-400">12</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+          {/* Price vs KM NZ Market Scatter Chart */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] p-6 sm:p-7 space-y-4">
+            <div>
+              <h3 className="text-base font-black text-slate-900">Price vs Kilometres (NZ Yard Comp)</h3>
+              <p className="text-xs text-slate-500 font-medium">This vehicle plotted against 40+ recent NZ listings.</p>
+            </div>
 
-              <div className="mt-6 flex items-center gap-4 bg-green-50 dark:bg-green-900/20 p-4 rounded-lg border border-green-100 dark:border-green-800/50">
-                <div className="text-3xl font-bold text-green-600 dark:text-green-400">78%</div>
-                <div className="text-sm font-medium text-green-800 dark:text-green-300">
-                  Better than 78% of similar listings
+            {/* SVG Scatter Chart */}
+            <div className="h-56 w-full relative mt-4 pt-4 border-l border-b border-slate-300">
+              {/* Y Axis Labels (Price) */}
+              <span className="absolute -left-10 top-0 text-[10px] font-bold text-slate-400">NZ$28k</span>
+              <span className="absolute -left-10 top-1/2 -translate-y-1/2 text-[10px] font-bold text-slate-400">NZ$22k</span>
+              <span className="absolute -left-10 bottom-0 text-[10px] font-bold text-slate-400">NZ$16k</span>
+
+              {/* X Axis Labels (KM) */}
+              <span className="absolute -bottom-5 left-0 text-[10px] font-bold text-slate-400">30k km</span>
+              <span className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-slate-400">60k km</span>
+              <span className="absolute -bottom-5 right-0 text-[10px] font-bold text-slate-400">90k km</span>
+
+              {/* Regression Trend Line */}
+              <svg className="absolute inset-0 w-full h-full overflow-visible pointer-events-none">
+                <line x1="5%" y1="20%" x2="95%" y2="80%" stroke="#CBD5E1" strokeWidth="2" strokeDasharray="4" />
+              </svg>
+
+              {/* NZ Comparable Dots */}
+              <div className="absolute top-[25%] left-[30%] w-2.5 h-2.5 rounded-full bg-slate-400" title="Trade Me: NZ$26,000 (42k km)" />
+              <div className="absolute top-[35%] left-[45%] w-2.5 h-2.5 rounded-full bg-slate-400" title="Turners: NZ$24,500 (55k km)" />
+              <div className="absolute top-[42%] left-[60%] w-2.5 h-2.5 rounded-full bg-slate-400" title="Trade Me: NZ$23,990 (61k km)" />
+              <div className="absolute top-[60%] left-[80%] w-2.5 h-2.5 rounded-full bg-slate-400" title="AutoTrader: NZ$21,500 (78k km)" />
+
+              {/* Target Vehicle Spot - Glowing Emerald Arbitrage Point */}
+              <div className="absolute top-[68%] left-[55%] -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
+                <span className="animate-ping absolute inline-flex h-6 w-6 rounded-full bg-emerald-400 opacity-60"></span>
+                <div className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-md font-bold text-[10px] z-10">
+                  ★
                 </div>
               </div>
             </div>
 
-            {/* Maximum Bid Details */}
-            <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-sm overflow-hidden">
-              <div className="p-6 bg-gray-50 dark:bg-gray-900/50 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-lg font-bold text-gray-900 dark:text-white">Your Maximum Buy Price</h2>
-                <div className="mt-4">
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">NZ$20,500</p>
-                  <p className="text-sm font-medium text-gray-500 mt-1">¥1,845,000</p>
-                </div>
-                <p className="text-sm text-gray-600 dark:text-gray-400 mt-4 leading-relaxed">
-                  This is the recommended maximum bid based on estimated retail value and target margin.
-                </p>
+            {/* Legend */}
+            <div className="flex items-center justify-center gap-6 pt-4 text-xs">
+              <div className="flex items-center gap-1.5 text-slate-600">
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-400"></span>
+                <span>Active NZ Yard Listings</span>
               </div>
-              
-              <details className="group">
-                <summary className="flex items-center justify-between p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                    <Info size={16} /> How is this calculated?
-                  </span>
-                  <ChevronDown size={18} className="text-gray-400 group-open:rotate-180 transition-transform" />
-                </summary>
-                <div className="px-6 pb-6 pt-2 space-y-3 text-sm">
-                  <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                    <span>FOB converted to NZD</span>
-                    <span>$15,778</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                    <span>Freight</span>
-                    <span>$2,500</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600 dark:text-gray-400">
-                    <span>Compliance</span>
-                    <span>$1,200</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600 dark:text-gray-400 pb-3 border-b border-gray-200 dark:border-gray-700">
-                    <span>GST & Fees</span>
-                    <span>$1,022</span>
-                  </div>
-                  <div className="flex justify-between font-medium text-gray-900 dark:text-gray-200 pt-1">
-                    <span>Estimated Landed Cost</span>
-                    <span>$20,500</span>
-                  </div>
-                  <div className="h-4"></div>
-                  <div className="flex justify-between font-medium text-gray-900 dark:text-gray-200">
-                    <span>Estimated Retail</span>
-                    <span>$24,500</span>
-                  </div>
-                  <div className="flex justify-between text-gray-600 dark:text-gray-400 pb-3 border-b border-gray-200 dark:border-gray-700">
-                    <span>Target Margin</span>
-                    <span>$3,000</span>
-                  </div>
-                  <div className="flex justify-between font-bold text-blue-600 dark:text-blue-400 pt-1 text-base">
-                    <span>Recommended Max Bid</span>
-                    <span>$20,500</span>
-                  </div>
-                </div>
-              </details>
+              <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
+                <span className="w-3 h-3 rounded-full bg-emerald-600 text-white flex items-center justify-center text-[8px]">★</span>
+                <span>This Heiwa Lot (Landed: NZ${totalLandedCost.toLocaleString()})</span>
+              </div>
             </div>
-            
+
+            <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-100 text-xs text-emerald-800 font-medium">
+              ★ <strong>Arbitrage Opportunity:</strong> Positioned NZ$4,000 below market regression line for 58k km.
+            </div>
+          </div>
+
+        </div>
+
+        {/* Live NZ Market Evidence Table */}
+        <div className="bg-white rounded-2xl border border-slate-200/90 shadow-[0_2px_8px_-2px_rgba(0,0,0,0.04)] overflow-hidden">
+          <div className="p-5 sm:p-6 border-b border-slate-100 flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-black text-slate-900">Live NZ Market Evidence</h3>
+              <p className="text-xs text-slate-500 font-medium">Similar active listings scraped from major NZ classifieds.</p>
+            </div>
+            <span className="text-xs font-bold text-slate-500">{vehicle.nzComparables.length} Verified Comparables</span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs text-left">
+              <thead className="bg-slate-50/80 border-b border-slate-200 text-slate-400 font-bold uppercase tracking-wider text-[10px]">
+                <tr>
+                  <th className="px-5 py-3.5">Listing Platform</th>
+                  <th className="px-5 py-3.5">Year</th>
+                  <th className="px-5 py-3.5">Mileage</th>
+                  <th className="px-5 py-3.5">Advertised Price</th>
+                  <th className="px-5 py-3.5">Days on Yard</th>
+                  <th className="px-5 py-3.5 text-right">Spread vs Heiwa Landed</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 font-medium">
+                {vehicle.nzComparables.map((comp, idx) => {
+                  const spread = comp.price - totalLandedCost;
+                  return (
+                    <tr key={idx} className="hover:bg-slate-50/50">
+                      <td className="px-5 py-3.5 font-bold text-slate-900 flex items-center gap-1.5">
+                        <ExternalLink size={12} className="text-slate-400" />
+                        {comp.source}
+                      </td>
+                      <td className="px-5 py-3.5 text-slate-700">{comp.year}</td>
+                      <td className="px-5 py-3.5 text-slate-700 font-mono">{(comp.km).toLocaleString()} km</td>
+                      <td className="px-5 py-3.5 font-bold text-slate-900">NZ${(comp.price).toLocaleString()}</td>
+                      <td className="px-5 py-3.5 text-slate-500">{comp.daysListed} days</td>
+                      <td className="px-5 py-3.5 text-right font-extrabold text-emerald-600">
+                        +NZ${spread.toLocaleString()}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         </div>
 
